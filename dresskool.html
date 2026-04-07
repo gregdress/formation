@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dresskool — Formation Vendeur Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'DM Sans',system-ui,sans-serif;background:#f5f3ee;color:#1a1814;overflow:hidden}
+#login{position:fixed;inset:0;background:#f5f3ee;display:flex;align-items:center;justify-content:center;z-index:100;padding:24px}
+.lb{width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center;gap:28px}
+.brand{font-family:'DM Serif Display',serif;font-size:48px;text-align:center;line-height:1}
+.brand em{font-style:italic;color:#2952e3}
+.bsub{font-size:13px;color:#9a9590;text-align:center;line-height:1.5;margin-top:8px}
+.lcard{background:#fff;border-radius:20px;padding:32px;width:100%;border:1px solid #e8e4dc;box-shadow:0 4px 24px rgba(0,0,0,.06)}
+.lcard h2{font-family:'DM Serif Display',serif;font-size:22px;margin-bottom:4px}
+.lcard p{font-size:13px;color:#9a9590;margin-bottom:24px}
+.fl label{display:block;font-size:11px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:#6b6762;margin-bottom:7px}
+.fl input{width:100%;padding:12px 14px;border:1.5px solid #e8e4dc;border-radius:10px;font-size:15px;font-family:inherit;color:#1a1814;background:#f9f8f5;outline:none;transition:border-color .2s}
+.fl input:focus{border-color:#2952e3;background:#fff}
+.btnl{width:100%;margin-top:18px;padding:13px;background:#1a1814;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer}
+.btnl:hover{background:#2e2c27}
+.lnote{font-size:12px;color:#b0aca6;text-align:center}
+#app{display:none;height:100vh;flex-direction:row}
+#app.visible{display:flex}
+.sb{width:268px;flex-shrink:0;background:#fff;border-right:1px solid #e8e4dc;display:flex;flex-direction:column;height:100vh;overflow-y:auto}
+.sbh{padding:20px 16px 14px;border-bottom:1px solid #e8e4dc;flex-shrink:0}
+.sbl{font-family:'DM Serif Display',serif;font-size:19px}
+.sbl em{font-style:italic;color:#2952e3}
+.sbu{font-size:11px;color:#9a9590;margin-top:3px}
+.sbp{padding:12px 16px;border-bottom:1px solid #e8e4dc;flex-shrink:0}
+.sbpr{display:flex;justify-content:space-between;font-size:11px;color:#9a9590;font-weight:500;margin-bottom:7px}
+.trk{height:3px;background:#e8e4dc;border-radius:2px}
+.fil{height:3px;border-radius:2px;background:#2952e3;transition:width .5s}
+.sbn{flex:1;padding:6px 0;overflow-y:auto}
+.nhome{display:flex;align-items:center;gap:9px;padding:10px 16px;cursor:pointer;font-size:13px;color:#6b6762;font-weight:500;transition:background .15s}
+.nhome:hover,.nhome.act{background:#eff4fe;color:#2952e3}
+.nbl{padding:8px 16px 3px;font-size:9.5px;font-weight:600;letter-spacing:.9px;text-transform:uppercase;color:#b0aca6;margin-top:4px}
+.nl{display:flex;align-items:flex-start;gap:9px;padding:7px 16px 7px 22px;cursor:pointer;transition:background .15s}
+.nl:hover:not(.lk){background:#f5f3ee}
+.nl.act{background:#eff4fe}
+.nl.lk{opacity:.4;cursor:not-allowed;pointer-events:none}
+.nd{width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;margin-top:1px}
+.nt{font-size:11.5px;color:#4a4740;line-height:1.35;flex:1}
+.nl.act .nt{color:#1d4ed8;font-weight:500}
+.sbf{padding:12px 16px;border-top:1px solid #e8e4dc;flex-shrink:0}
+.btnlo{width:100%;padding:8px;background:none;border:1px solid #e8e4dc;border-radius:8px;font-size:12px;color:#9a9590;cursor:pointer;font-family:inherit}
+.btnlo:hover{background:#f5f3ee}
+.ct{flex:1;overflow-y:auto;height:100vh}
+.cti{max-width:720px;padding:40px 48px}
+.hh{background:#1a1814;color:#fff;border-radius:20px;padding:36px;margin-bottom:24px}
+.hh h1{font-family:'DM Serif Display',serif;font-size:32px;line-height:1.15;margin-bottom:12px}
+.hh h1 em{font-style:italic;color:#c9a84c}
+.hh p{font-size:14px;opacity:.72;line-height:1.7;margin-bottom:18px}
+.htags{display:flex;flex-wrap:wrap;gap:7px}
+.htag{background:rgba(255,255,255,.13);border-radius:20px;padding:4px 13px;font-size:11.5px;font-weight:500}
+.hcard{background:#fff;border:1px solid #e8e4dc;border-radius:16px;padding:22px;margin-bottom:18px}
+.hcard h3{font-family:'DM Serif Display',serif;font-size:16px;margin-bottom:14px}
+.bgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.bi{display:flex;align-items:flex-start;gap:9px;padding:11px;border-radius:10px;background:#f9f8f5;cursor:pointer;transition:background .15s}
+.bi:hover{background:#eff4fe}
+.be{font-size:17px;flex-shrink:0;margin-top:1px}
+.bt{font-size:12.5px;font-weight:500;color:#1a1814}
+.bs{font-size:10.5px;color:#9a9590;margin-top:2px}
+.btnst{display:block;width:100%;padding:13px;background:#2952e3;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:6px}
+.btnst:hover{opacity:.88}
+.lbadge{display:inline-flex;align-items:center;gap:5px;padding:3px 13px;border-radius:20px;font-size:11px;font-weight:600;margin-bottom:13px}
+.ltit{font-family:'DM Serif Display',serif;font-size:30px;line-height:1.15;margin-bottom:7px;letter-spacing:-.3px}
+.lmeta{display:flex;gap:14px;font-size:12px;color:#9a9590;margin-bottom:28px}
+.lbody{font-size:15px;color:#4a4740;line-height:1.78}
+.lbody h2{font-family:'DM Serif Display',serif;font-size:22px;color:#1a1814;margin:28px 0 10px}
+.lbody h3{font-size:16px;font-weight:600;color:#1a1814;margin:20px 0 8px}
+.lbody p{margin-bottom:14px}
+.lbody ul,.lbody ol{margin:0 0 14px 20px}
+.lbody li{margin-bottom:7px}
+.lbody strong{color:#1a1814;font-weight:600}
+.lbody blockquote{border-left:3px solid #2952e3;padding:12px 16px;background:#eff4fe;border-radius:0 10px 10px 0;margin:18px 0;font-size:14px;color:#1d4ed8;font-weight:500;line-height:1.58}
+.lbody hr{border:none;border-top:1px solid #e8e4dc;margin:24px 0}
+.qbox{background:#fff;border:1px solid #e8e4dc;border-radius:18px;padding:26px;margin-top:32px}
+.qhdr{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.qico{width:40px;height:40px;border-radius:50%;background:#1a1814;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.qtit{font-family:'DM Serif Display',serif;font-size:17px}
+.qsub{font-size:11.5px;color:#9a9590;margin-top:2px}
+.qq{margin-bottom:22px}
+.qn{display:inline-block;background:#f5f3ee;border-radius:20px;padding:2px 9px;font-size:10.5px;font-weight:600;color:#9a9590;margin-bottom:7px}
+.qt{font-size:14.5px;font-weight:600;margin-bottom:10px;line-height:1.4}
+.qo{display:flex;align-items:flex-start;gap:11px;padding:11px 14px;border:1.5px solid #e8e4dc;border-radius:10px;margin-bottom:7px;cursor:pointer;font-size:13.5px;color:#4a4740;background:#f9f8f5;transition:all .15s;line-height:1.4;user-select:none}
+.qo:hover:not(.fz):not(.ok):not(.ng){border-color:#93c5fd;background:#eff4fe;color:#1d4ed8}
+.qo.sl{border-color:#2952e3;background:#eff4fe;color:#1d4ed8;font-weight:500}
+.qo.ok{border-color:#16a34a;background:#f0fdf4;color:#15803d;font-weight:500;cursor:default}
+.qo.ng{border-color:#dc2626;background:#fef2f2;color:#b91c1c;cursor:default}
+.qo.fz{cursor:default;opacity:.55}
+.od{width:16px;height:16px;border-radius:50%;border:1.5px solid currentColor;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;margin-top:1px}
+.btnsub{padding:12px 26px;background:#1a1814;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:14px}
+.btnsub:disabled{opacity:.3;cursor:not-allowed}
+.btnsub:not(:disabled):hover{background:#2e2c27}
+.rok{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:13px 16px;margin-top:14px;font-size:13.5px;color:#15803d;font-weight:500}
+.rng{background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:13px 16px;margin-top:14px;font-size:13.5px;color:#b91c1c;font-weight:500}
+.rdn{background:#dcfce7;border:1px solid #bbf7d0;border-radius:10px;padding:13px 16px;margin-top:14px;font-size:13.5px;color:#15803d;font-weight:500}
+.btnnx{display:block;width:100%;padding:13px;background:#2952e3;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:10px}
+.btnnx:hover{opacity:.88}
+.btnrt{background:none;border:none;color:#b91c1c;font-weight:700;text-decoration:underline;cursor:pointer;font-family:inherit;font-size:13.5px;padding:0;margin-left:5px}
+.exbox{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:18px;padding:22px;margin-top:18px}
+.exl{font-size:10.5px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.6px;margin-bottom:7px}
+.ext{font-family:'DM Serif Display',serif;font-size:17px;color:#14532d;margin-bottom:11px}
+.exb{font-size:13.5px;color:#166534;line-height:1.7}
+.exb ol,.exb ul{margin-left:17px}
+.exb li{margin-bottom:7px}
+.exb p{margin-bottom:10px}
+.exb strong{font-weight:600}
+
+</style>
+</head>
+<body>
+<div id="login">
+  <div class="lb">
+    <div>
+      <div class="brand">Dress<em>kool</em></div>
+      <div class="bsub">La formation pour devenir vendeur.se pro sur Vinted avec DressKare</div>
+    </div>
+    <div class="lcard">
+      <h2>Accéder à la formation</h2>
+      <p>8 blocs &middot; 9 leçons &middot; quiz &middot; exercices terrain</p>
+      <div class="fl">
+        <label>Ton prénom</label>
+        <input type="text" id="iname" placeholder="Ex : Sophie" autocomplete="given-name">
+      </div>
+      <button class="btnl" id="btnlogin">Commencer la formation &rarr;</button>
+    </div>
+    <div class="lnote">Ta progression est sauvegardée dans ton navigateur</div>
+  </div>
+</div>
+<div id="app">
+  <div class="sb">
+    <div class="sbh">
+      <div class="sbl">Dress<em>kool</em></div>
+      <div class="sbu" id="sbu"></div>
+    </div>
+    <div class="sbp">
+      <div class="sbpr"><span>Progression</span><span id="spct">0%</span></div>
+      <div class="trk"><div class="fil" id="pfil" style="width:0%"></div></div>
+    </div>
+    <div class="sbn" id="sbn"></div>
+    <div class="sbf"><button class="btnlo" id="btnlo">Se déconnecter</button></div>
+  </div>
+  <div class="ct"><div class="cti" id="main"></div></div>
+</div>
+<script>
+
+const DATA = [{"id": 1, "emoji": "💡", "title": "Vision & Mindset", "short": "Vision", "color": "#dbeafe", "tc": "#1d4ed8", "lessons": [{"id": "l11", "title": "Et si vendre des vêtements devenait un vrai métier ?", "type": "Vision fondatrice", "duree": "20 min", "body": "<h2>Hook</h2><p>Et si tu pouvais générer un complément de revenus sans investissement, depuis chez toi, simplement avec des vêtements qui existent déjà autour de toi ?</p><hr><h2>Ce que les gens croient — et qui est faux</h2><p>Aujourd’hui, quand on pense à la revente de vêtements de seconde main, on imagine encore l’ancien modèle : acheter du stock avec le risque financier que ça implique, prendre des risques sur la qualité et les invendus, y passer des heures à tout gérer manuellement.</p><p><strong>Mais ça, c’est une ancienne vision.</strong></p><p>Le métier est en train de changer. Et si tu lis ces lignes maintenant, tu as l’opportunité de te positionner sur le nouveau modèle avant qu’il devienne mainstream.</p><hr><h2>Ce qui est possible aujourd’hui</h2><p>Aujourd’hui, tu peux travailler depuis chez toi à ton rythme, sans constituer de stock, sans investissement initial, avec des vêtements qui existent déjà dans les placards des gens autour de toi.</p><p>Tu peux devenir <strong>vendeur.se indépendant.e vêtements</strong>, à ton rythme, sans risque financier. Ce n’est plus un side hustle bricolé. C’est une vraie activité de revente vêtements, avec une structure, des outils, et un potentiel réel.</p><hr><h2>Mais soyons honnêtes</h2><p>Ce modèle est accessible. Il n’est pas magique.</p><ul><li>Ce n’est pas un revenu passif qui tombe sans rien faire</li><li>Ce n’est pas un système automatique qui tourne tout seul dès le premier jour</li><li>Une activité sans effort ni régularité, ça n’existe pas</li></ul><p>Ce que tu investis, c’est du temps et de l’organisation. La différence avec l’ancien modèle : le risque financier est nul. L’effort, lui, est bien réel — mais structuré, méthodique, accompagné par DressKare.</p><hr><h2>Ce que tu es en train de construire</h2><p>Tu ne te lances pas dans « vendre sur Vinted ». Tu te lances dans quelque chose de plus grand : <strong>devenir vendeur.se de vêtements dans une économie circulaire locale.</strong></p><hr><h2>À retenir</h2><blockquote>Ce n’est plus un side hustle bricolé. C’est une vraie activité revente vêtements, accessible sans investissement — à condition d’être régulier.se et organisé.e. DressKare est le système qui rend cette organisation possible à grande échelle.</blockquote>", "quiz": [{"q": "Quelle est la principale différence entre l’ancien modèle de revente et le modèle DressKare ?", "opts": ["L’ancien modèle était plus rentable mais plus risqué", "Le nouveau modèle permet de vendre sans investissement, en valorisant des vêtements déjà existants autour de soi", "DressKare permet d’acheter des lots moins chers qu’ailleurs", "Il n’y a pas de vraie différence — c’est juste du marketing"], "ok": 1}, {"q": "Qu’est-ce que ce modèle demande malgré l’absence d’investissement financier ?", "opts": ["Rien — c’est vraiment passif", "Un abonnement mensuel à DressKare obligatoire", "De la régularité et de l’organisation pour sourcer, photographier, publier et republier", "D’habiter dans une grande ville"], "ok": 2}, {"q": "Comment doit-on se positionner mentalement face à cette activité ?", "opts": ["Comme un hobby qu’on fait quand on a le temps", "Comme une vraie activité de vendeur.se indépendant.e dans une économie circulaire locale", "Comme un investissement boursier à faible risque", "Comme un complément de revenus sans aucune contrainte"], "ok": 1}], "exercise": "<p><strong>À faire maintenant :</strong></p><ol><li>Réponds honnêtement : est-ce que tu vois cette activité comme un hobby ou comme une opportunité réelle ?</li><li>Note ton objectif de revenu mensuel. Un chiffre précis : ___&euro;/mois</li><li>Estime combien d’heures par semaine tu peux y consacrer réellement : ___h/semaine</li><li>Liste 5 personnes autour de toi qui ont des vêtements à vendre mais ne le font pas</li></ol><p>Ces 4 réponses sont la fondation de tout ce qui suit dans la formation.</p>"}, {"id": "l12", "title": "Le nouveau modèle : la revente locale et la circularité", "type": "Vision différenciante", "duree": "20 min", "body": "<h2>Hook</h2><p>Le plus gros mensonge dans la seconde main, c’est de croire que tu dois aller chercher les vêtements loin.</p><hr><h2>La réalité : les vêtements sont déjà là</h2><p>La réalité, c’est que les vêtements sont déjà là : chez toi, autour de toi, chez des gens qui ne savent pas quoi en faire.</p><p>La Française moyenne possède 150 à 200 vêtements. Elle n’en porte régulièrement que 20%. Le reste est dans des placards, des cartons, attendant qu’on s’en occupe.</p><hr><h2>L’insight clé : les gens ne veulent pas vendre eux-mêmes</h2><p>Les gens autour de toi veulent souvent vendre leurs vêtements. Mais ils ne le font pas. Pourquoi ?</p><ul><li><strong>Manque de temps</strong> — photographier, rédiger, publier, gérer les messages, emballer, envoyer… c’est chronophage</li><li><strong>La flemme</strong> — tout ça pour vendre une robe à 12&euro;, ça ne motive pas</li><li><strong>La complexité perçue</strong> — ils ne savent pas comment fixer les prix, comment emballer, quelle étiquette utiliser</li></ul><p><strong>Et c’est là que ton rôle commence.</strong></p><hr><h2>Ce que tu fais concrètement</h2><ol><li><strong>Tu récupères</strong> — les vêtements de personnes qui veulent vider leurs placards</li><li><strong>Tu valorises</strong> — photos, description, prix juste, mise en ligne professionnelle</li><li><strong>Tu vends</strong> — sur Vinted et autres plateformes</li><li><strong>Tu reverses</strong> — une partie des ventes au propriétaire d’origine</li></ol><p>C’est simple. C’est utile. <strong>Tu résous un vrai problème pour de vraies personnes.</strong></p><hr><h2>La vision circulaire</h2><ul><li><strong>Moins de gaspillage textile</strong> — des vêtements retrouvent une seconde vie</li><li><strong>Plus de valeur locale</strong> — tu crées des revenus pour des gens autour de toi</li><li><strong>Plus de sens</strong> — tu es un.e acteur.rice de l’économie circulaire locale</li></ul><hr><h2>À retenir</h2><blockquote>Les vêtements qui vont alimenter ton activité existent déjà — dans les placards des gens autour de toi. Ton rôle n’est pas de les acheter, c’est de les valoriser. C’est ce qui différencie DressKare de tout le reste.</blockquote>", "quiz": [{"q": "Pourquoi la plupart des gens ne vendent-ils pas leurs vêtements eux-mêmes ?", "opts": ["Parce qu’ils préfèrent donner à des associations", "Parce que Vinted est trop compliqué", "Parce que ça prend du temps, c’est fastidieux et la complexité perçue est trop grande", "Parce qu’ils ne savent pas que Vinted existe"], "ok": 2}, {"q": "Qu’est-ce que le modèle de revente locale change fondamentalement ?", "opts": ["Il permet de faire plus de marge sur chaque article", "Il élimine le risque lié à l’achat de stock et ancre l’activité dans un service utile à l’entourage", "Il est plus rapide car les photos sont automatiques", "Il permet d’éviter les frais Vinted"], "ok": 1}, {"q": "Que signifie ‘économie circulaire locale’ dans le contexte DressKare ?", "opts": ["Acheter des vêtements dans les friperies locales uniquement", "Valoriser des vêtements déjà existants dans l’entourage proche, en évitant le gaspillage et en créant de la valeur localement", "Revendre uniquement des vêtements fabriqués en France", "Organiser des marchés de seconde main dans son quartier"], "ok": 1}], "exercise": "<p><strong>À faire maintenant :</strong></p><ol><li>Liste 5 personnes autour de toi qui ont des vêtements à vendre mais ne le font pas</li><li>Pour chacune, note la raison probable pour laquelle elles ne vendent pas</li><li>Formule en une phrase comment tu pourrais leur proposer ton service</li></ol>"}, {"id": "l13", "title": "Comment transformer ça en complément de revenus concret", "type": "Mécanique business", "duree": "20 min", "body": "<h2>Hook</h2><p>Cette vision est simple… mais elle ne fonctionne que si tu la structures.</p><hr><h2>Les 3 leviers de ton revenu</h2><h3>1. Le volume d’articles en ligne</h3><p>C’est le levier le plus puissant et le plus sous-estimé :</p><ul><li>30 articles actifs &rarr; quelques ventes aléatoires, revenu instable</li><li>100+ articles actifs &rarr; vrai complément de revenus, activité prévisible</li><li>200+ articles actifs &rarr; activité sérieuse, revenu mensuel significatif</li></ul><p>Le volume est la clé. <strong>Le volume.</strong></p><h3>2. La marge par article</h3><p>Un article vendu à 15&euro; avec 8&euro; de marge nette &times; 30 ventes/mois = 240&euro;. Le même article vendu à 25&euro; avec 15&euro; de marge &times; 30 ventes = 450&euro;. La sélection des pièces que tu acceptes impacte directement ta rentabilité.</p><h3>3. La régularité</h3><p>Une vendeuse qui publie 3 nouveaux articles tous les jours dépasse en 3 mois une vendeuse qui publie 50 articles une fois et n’y touche plus. L’algorithme Vinted favorise l’activité récente. La régularité bat la perfection.</p><hr><h2>L’équation simple</h2><p><strong>Revenu = Marge &times; Articles actifs &times; Régularité</strong></p><hr><h2>Le moment DressKare</h2><p>Plus tu récupères de vêtements, plus tu dois gérer du volume. <strong>Sans système, ça devient vite incontrôlable.</strong></p><p>Imagine : tu as 5 déposantes. Chacune t’a confié 30 pièces. Tu as 150 articles à gérer. Sans outil : tu ne sais plus quelle pièce appartient à qui, tu passes 10 minutes à créer chaque fiche manuellement, tu oublies de republier les articles qui stagnent.</p><p><strong>Avec DressKare :</strong> chaque dépôt est tracé, les fiches se créent en moins de 2 minutes grâce à l’IA, et la publication sur Vinted se fait en 1 clic. DressKare n’est pas un « nice to have ». C’est l’infrastructure qui rend le volume possible.</p><hr><h2>À retenir</h2><blockquote>La vision sans structure, ça reste un rêve. Les trois leviers de ton revenu sont le volume d’articles actifs, la marge par article, et la régularité. DressKare est le système qui te permet de tenir ces trois leviers à grande échelle.</blockquote>", "quiz": [{"q": "Quel est le levier le plus puissant pour augmenter son revenu Vinted ?", "opts": ["Avoir les meilleures photos de la plateforme", "Vendre uniquement des marques de luxe", "Augmenter le volume d’articles actifs en ligne de façon régulière", "Poster des stories Instagram chaque jour"], "ok": 2}, {"q": "Pourquoi DressKare devient-il indispensable dès qu’on monte en volume ?", "opts": ["Parce que Vinted l’exige pour les vendeurs pro", "Parce que sans système, gérer plusieurs dépôts devient incontrôlable", "Parce qu’il offre des remises sur les frais de port", "Parce qu’il permet d’avoir plus d’avis positifs"], "ok": 1}, {"q": "Que signifie réellement ‘sans investissement’ dans le modèle DressKare ?", "opts": ["Aucun effort n’est nécessaire — c’est passif", "Pas d’investissement financier, mais un investissement réel en temps et en organisation", "On peut tout faire en 30 minutes par semaine", "DressKare fait tout automatiquement à ta place"], "ok": 1}], "exercise": "<p><strong>Calcule ton objectif :</strong></p><ol><li>Ton objectif mensuel net : ___&euro;</li><li>Ta marge nette estimée par article vendu : ___&euro;</li><li>Articles à vendre par mois nécessaires : objectif &divide; marge = ___ ventes/mois</li><li>Articles actifs nécessaires (taux de rotation 25-30%) : ventes &times; 3,5 = ___ articles</li><li>Articles à publier par semaine : ___ articles/semaine</li></ol><p><strong>Ce dernier chiffre est ton objectif de publication. Garde-le en tête pour toute la suite.</strong></p>"}]}, {"id": 2, "emoji": "🛍️", "title": "Sourcing rentable", "short": "Sourcing", "color": "#dcfce7", "tc": "#15803d", "lessons": [{"id": "l21", "title": "Resell vs Dépôt-vente — choisir ton modèle", "type": "Stratégie", "duree": "20 min", "body": "<h2>Introduction</h2><p>Avant de sourcer quoi que ce soit, tu dois trancher une question fondamentale : <strong>quel modèle tu choisis ?</strong></p><p>Il en existe deux : le <strong>resell</strong> (achat-revente) et le <strong>dépôt-vente</strong>. Ce choix va impacter ton capital de départ, ton risque, ton temps, et ta rentabilité.</p><hr><h2>Le Resell — tu achètes pour revendre</h2><p>Tu achètes des vêtements (lots, friperies, vide-greniers, boxes...) pour les revendre à l’unité. Tu es propriétaire de ton stock.</p><p><strong>Avantages :</strong> contrôle total, marges de 2x à 4x le prix d’achat, prix libres, spécialisation possible.</p><p><strong>Contraintes :</strong> capital de départ 150-300&euro; minimum, gestion du stock physique, risque financier réel sur les invendus.</p><hr><h2>Le Dépôt-vente — tu vends pour les autres</h2><p>Tu ne possèdes pas les vêtements. Tu les reçois de tes déposants et tu prends une commission sur chaque vente réussie.</p><p><strong>Avantages :</strong> zéro capital de départ, zéro risque financier, accès aux marques haut de gamme (Sandro, Maje, Claudie Pierlot...), scalable sans limite.</p><p><strong>Contraintes :</strong> marge partagée avec le déposant, gestion des relations humaines, minimum 15 articles par dépôt.</p><hr><h2>Comparaison directe</h2><ul><li><strong>Capital nécessaire :</strong> Resell = 150-300&euro; / Dépôt-vente = 0&euro;</li><li><strong>Risque financier :</strong> Resell = réel / Dépôt-vente = nul</li><li><strong>Accès aux marques premium :</strong> Resell = difficile / Dépôt-vente = naturel</li><li><strong>Scalabilité :</strong> Resell = limitée par le capital / Dépôt-vente = illimitée</li></ul><hr><h2>DressKare fonctionne pour les deux modèles</h2><p><strong>Pour le dépôt-vente :</strong> chaque déposant a son propre espace dans l’app. Les commissions sont calculées automatiquement.</p><p><strong>Pour le resell :</strong> tu rentres ton stock comme un dépôt d’achat-revente. Import possible depuis Excel.</p><hr><h2>À retenir</h2><blockquote>Le dépôt-vente est le meilleur point d’entrée : zéro risque, zéro capital, accès aux meilleures pièces. Le resell apporte plus de contrôle et de marge mais demande un investissement initial. Les deux modèles sont compatibles avec DressKare.</blockquote>", "quiz": [{"q": "Quel est le principal avantage du dépôt-vente par rapport au resell pour un vendeur qui démarre ?", "opts": ["Les marges sont plus élevées en dépôt-vente", "Le dépôt-vente nécessite zéro capital de départ et zéro risque financier", "Il est plus facile de trouver des déposants que des lots", "Vinted favorise les vendeurs en dépôt-vente dans l’algorithme"], "ok": 1}, {"q": "Pourquoi le dépôt-vente donne-t-il accès aux pièces de marques haut de gamme ?", "opts": ["Les grossistes refusent de vendre ces marques", "Ces pièces sont dans les placards des particuliers et ne circulent pas dans les filières grossistes", "Ces marques sont trop chères pour les lots", "Vinted interdit la revente de ces marques via des lots"], "ok": 1}, {"q": "Combien d’articles minimum par dépôt pour que ce soit rentable ?", "opts": ["5 articles", "10 articles", "15 articles minimum", "30 articles"], "ok": 2}], "exercise": "<p><strong>Décide de ton modèle de départ :</strong></p><ol><li>As-tu 150-300&euro; disponibles à investir sans risque ?</li><li>As-tu 3 personnes minimum dans ton entourage avec des dressings à vider ?</li><li>Note ton modèle de départ : dépôt-vente / resell / les deux</li><li>Si dépôt-vente : liste immédiatement tes 3 premiers déposants potentiels</li><li>Si resell : définis ta niche (vintage, sportswear, femme casual, enfant...)</li></ol>"}, {"id": "l22", "title": "Le dépôt-vente — comment ça marche exactement", "type": "Modèle dépôt", "duree": "25 min", "body": "<h2>Introduction</h2><p>Tu as choisi le dépôt-vente. Cette leçon te donne le fonctionnement complet, étape par étape, avec les détails que la plupart des guides n’expliquent pas.</p><hr><h2>Le processus en 5 étapes</h2><h3>Étape 1 — Qualifier et récupérer les vêtements</h3><p><strong>Critères d’acceptation :</strong></p><ul><li>Articles en très bon état ou neufs — pas de trous, taches, usure excessive</li><li>Marques acceptées : Zara, Mango, H&amp;M, Sandro, Maje, Nike, Levi’s...</li><li>Marques refusées : Shein, Primark, Gémo, Kiabi, marques distributeur</li><li>Minimum 15 articles par dépôt</li><li>Un seul genre par dépôt (femme, homme ou enfant)</li><li>70% des articles doivent correspondre à la saison actuelle</li></ul><h3>Étape 2 — Inventaire et prix</h3><p>Tu prends les photos dans DressKare, l’IA analyse et suggère catégorie, description et prix. Tu envoies les propositions au déposant qui valide depuis son espace.</p><h3>Étape 3 — Publication et visibilité</h3><p>Tu publies via l’extension Chrome DressKare. Tu republies régulièrement, tu baisses les prix après 14 jours sans vente (en accord avec le déposant).</p><h3>Étape 4 — Payer le déposant</h3><p>DressKare calcule automatiquement la répartition à chaque vente. Garde toujours une trace écrite des montants versés.</p><h3>Étape 5 — Gérer les invendus</h3><p>Après 2-3 mois : restitution au déposant ou don à une association partenaire.</p><hr><h2>Comment fixer tes commissions</h2><ul><li><strong>40/60</strong> (40% vendeur / 60% déposant) — le plus courant</li><li><strong>50/50</strong> — justifié si tu offres un service premium (récupération à domicile, mannequin IA)</li><li><strong>30/70</strong> — si le déposant a des pièces très haut de gamme</li></ul><hr><h2>Les erreurs classiques à éviter</h2><ul><li><strong>Accepter n’importe quoi par politesse.</strong> Tu passes 3h à photographier des articles qui ne se vendront jamais.</li><li><strong>Ne pas fixer les règles à l’avance.</strong> Durée, commission, invendus — tout doit être clair avant de commencer.</li><li><strong>Mélanger les stocks de plusieurs déposants.</strong> Avec DressKare, chaque article est lié à son déposant automatiquement.</li></ul><hr><h2>À retenir</h2><blockquote>Le dépôt-vente repose sur deux piliers : des critères d’acceptation stricts et des règles claires établies dès le départ. Sans ces deux piliers, le modèle devient chronophage et conflictuel.</blockquote>", "quiz": [{"q": "Pourquoi est-il important de refuser les articles Shein, Primark ou Kiabi dans un dépôt ?", "opts": ["Ces marques sont interdites sur Vinted", "Ces articles ne se vendent pas ou très peu sur Vinted — ils monopolisent ton temps pour aucun retour", "DressKare ne reconnaît pas ces marques dans son IA", "Les acheteurs Vinted n’aiment pas ces marques"], "ok": 1}, {"q": "Quelle commission vendeur est la plus courante dans un dépôt-vente standard ?", "opts": ["20% pour le vendeur / 80% pour le déposant", "60% pour le vendeur / 40% pour le déposant", "40% pour le vendeur / 60% pour le déposant", "10% pour le vendeur / 90% pour le déposant"], "ok": 2}, {"q": "Qu’est-ce qui doit être défini AVANT de commencer un dépôt ?", "opts": ["Le nombre exact de ventes prévues", "La durée du dépôt, la commission, la gestion des invendus et le délai de paiement", "La liste complète des acheteurs potentiels", "Le budget marketing pour promouvoir les articles"], "ok": 1}], "exercise": "<p><strong>Prépare ton kit déposant :</strong></p><ol><li>Rédige ta grille de critères d’acceptation</li><li>Décide de ta commission de départ (40% ou 50% vendeur ?)</li><li>Rédige un message type à envoyer à un déposant potentiel en 5 lignes maximum</li><li>Prépare un accord simple : durée du dépôt, commission, gestion des invendus</li></ol>"}, {"id": "l23", "title": "Trouver des déposants — la méthode réseau", "type": "Acquisition déposants", "duree": "20 min", "body": "<h2>Introduction</h2><p>Trouver ses premiers déposants ne nécessite ni pub payante ni Instagram avec 1000 abonnés. Ça commence par ton téléphone et les contacts que tu as déjà.</p><hr><h2>La vérité sur les déposants</h2><p>Presque tout le monde autour de toi a des vêtements à vendre. La Française moyenne possède 150 à 200 vêtements et n’en porte régulièrement que 20%.</p><p>Ton service résout exactement leurs problèmes. Tu n’as pas à convaincre des gens de vendre — ils veulent déjà vendre, ils cherchent juste quelqu’un pour le faire à leur place.</p><hr><h2>Les 5 cercles de sourcing réseau</h2><h3>Cercle 1 — Toi-même</h3><p>Commence par ton propre dressing. Du stock gratuit, risque zéro. Vise 15 à 30 pièces minimum pour commencer.</p><h3>Cercle 2 — La famille proche</h3><p>Parents, frères, sœurs, conjoint. Ils te font confiance et veulent t’aider à démarrer.</p><h3>Cercle 3 — Les amies proches</h3><p>Message direct, honnête : « Je me lance dans la vente de vêtements sur Vinted, j’aide les gens à vider leurs placards et je prends une commission. T’aurais pas des trucs à sortir ? »</p><h3>Cercle 4 — Le réseau élargi</h3><p>Camarades, anciens collègues, voisines, mamans de l’école. Via Instagram, Facebook ou WhatsApp.</p><h3>Cercle 5 — L’inconnu qualifié</h3><p>Post Instagram ‘recherche dépôt’, groupes Facebook locaux, bouche à oreille de tes déposantes actuelles.</p><hr><h2>Le message qui marche</h2><p><em>« Salut [prénom] ! Je me lance dans un projet sympa — j’aide les gens à vider leurs placards et vendre leurs vêtements sur Vinted sans avoir à s’en occuper elles-mêmes. Je gère tout : photos, mise en ligne, envoi des colis. Tu touches une partie des ventes, moi je garde ma commission. Si t’as des vêtements qui prennent la poussière (minimum 15 pièces), ça pourrait t’intéresser ? »</em></p><hr><h2>À retenir</h2><blockquote>Tes premiers déposants sont dans ton téléphone. Un message honnête envoyé à 10 contacts peut te donner 2 à 3 déposantes en 48h — largement suffisant pour démarrer.</blockquote>", "quiz": [{"q": "Par quel cercle de réseau doit-on commencer pour trouver ses premiers déposants ?", "opts": ["Les groupes Facebook locaux — plus grande audience", "Soi-même et la famille proche — confiance immédiate, zéro pression", "Instagram — plus efficace pour toucher des inconnues", "Les vide-greniers — beaucoup de vendeurs potentiels"], "ok": 1}, {"q": "Pourquoi presque tout le monde autour de toi est un déposant potentiel ?", "opts": ["Tout le monde veut gagner de l’argent", "La Française moyenne possède 150-200 vêtements mais n’en porte que 20% — le reste attend dans les placards", "Vinted a rendu la vente de vêtements très populaire", "Les gens ont honte de leurs vieux vêtements"], "ok": 1}, {"q": "Quel signal d’alerte doit te faire refuser ou fortement qualifier un dépôt ?", "opts": ["La déposante habite loin de chez toi", "Elle a principalement des articles Shein ou des vêtements achetés il y a plus de 10 ans chez H&M", "Elle a moins de 30 articles", "Elle ne connaît pas les prix Vinted"], "ok": 1}], "exercise": "<p><strong>Lance ta première campagne déposants :</strong></p><ol><li>Ouvre tes contacts et identifie 10 personnes susceptibles d’avoir un dressing à vider</li><li>Rédige ton message personnalisé</li><li>Envoie-le à au moins 5 d’entre elles aujourd’hui — maintenant si possible</li><li>Pour celles qui répondent positivement, pose les questions de qualification</li><li>Fixe un rendez-vous avec la première déposante qualifiée</li></ol>"}, {"id": "l24", "title": "La soirée Tupperware version dépôt-vente", "type": "Stratégie acquisition", "duree": "20 min", "body": "<h2>Introduction</h2><p>Il y a une méthode que les meilleures vendeuses pro utilisent pour trouver des déposants en masse — et personne n’en parle vraiment. Elle s’inspire directement du concept de la soirée Tupperware : réunir un groupe dans une ambiance conviviale, présenter un service, et repartir avec des commandes.</p><hr><h2>Pourquoi ça marche si bien</h2><p>Trouver des déposants un par un, c’est lent. Une soirée bien organisée peut te donner 4 à 6 déposantes confirmées en une seule soirée — soit 2 à 3 mois de stock potentiel en une fois.</p><ul><li>Quand une personne dit oui, les autres ont tendance à suivre</li><li>L’effet social réduit les hésitations</li><li>L’ambiance décontractée enlève la pression commerciale</li><li>Les participantes deviennent spontanément des ambassadrices</li></ul><hr><h2>Comment organiser ta première soirée</h2><p>Vise 6 à 10 invitées. Chez toi ou chez une amie. Ambiance décontractée : apéro, musique douce.</p><p><strong>Déroulé (2h) :</strong></p><ul><li>30 min — Accueil et apéro</li><li>20 min — Présentation : montre DressKare sur ton téléphone, partage des chiffres concrets (« j’ai vendu 380&euro; pour Marie, elle a touché 228&euro; »)</li><li>40 min — Tri en direct : tu évalues les pièces apportées, tu expliques ton raisonnement</li><li>30 min — Questions et prise de contact</li></ul><hr><h2>Le message d’invitation</h2><p><em>« Je t’invite à une petite soirée sympa chez moi [date/heure]. On va parler mode seconde main, je vais te montrer comment je gagne de l’argent avec les vêtements qui dorment dans les placards. Viens avec des vêtements que tu ne portes plus si tu en as. Apéro offert ! »</em></p><hr><h2>Résultats attendus</h2><p>Une soirée bien organisée avec 8 invitées donne typiquement : 2 à 3 dépôts confirmés, 50 à 150 articles potentiels, et plusieurs recommandations spontanées.</p><hr><h2>À retenir</h2><blockquote>Une soirée Tupperware bien organisée peut te donner 2 à 3 mois de stock en une seule soirée. C’est la méthode la plus efficace pour trouver des déposants rapidement, sans pub, sans Instagram.</blockquote>", "quiz": [{"q": "Combien d’invitées est-il recommandé de réunir pour une soirée Tupperware dépôt-vente efficace ?", "opts": ["20 à 30 personnes pour maximiser les chances", "2 à 3 personnes seulement", "6 à 10 personnes — assez pour la dynamique de groupe, pas trop pour rester intime", "Le nombre n’a pas d’importance"], "ok": 2}, {"q": "Quel est l’élément le plus convaincant à montrer pendant la présentation ?", "opts": ["Un catalogue de vêtements tendance", "Des chiffres concrets de ventes réelles", "Ton nombre d’abonnés Instagram", "Les avis de tes acheteurs Vinted"], "ok": 1}, {"q": "Pourquoi la dynamique de groupe est-elle un avantage ?", "opts": ["Les gens sont plus généreux en groupe", "Quand une personne dit oui, les autres ont tendance à suivre — l’effet social réduit les hésitations", "Tu peux parler à plusieurs personnes en même temps", "Les invitées apportent plus de vêtements"], "ok": 1}], "exercise": "<p><strong>Planifie ta première soirée :</strong></p><ol><li>Choisis une date dans les 3 prochaines semaines</li><li>Liste 10 personnes à inviter (vise 6-8 présentes)</li><li>Rédige ton message d’invitation</li><li>Envoie les invitations aujourd’hui</li><li>Prépare 2-3 exemples de ventes récentes à montrer</li></ol>"}, {"id": "l25", "title": "Les boxes French Pick — sourcing achat-revente", "type": "Sourcing achat", "duree": "15 min", "body": "<h2>Introduction</h2><p>Si tu veux compléter ton activité dépôt-vente avec du resell ciblé, les boxes de friperie sont une option à connaître. DressKare a négocié un partenariat avec French Pick qui change complètement l’équation.</p><hr><h2>Qu’est-ce que French Pick ?</h2><p>French Pick vend des boxes de vêtements de seconde main triés par catégorie et par grade de qualité. Contrairement aux grossistes classiques, tu sais exactement ce que tu commandes.</p><p><strong>Exemples de boxes :</strong> vestes cuir vintage, trench femme, chemises vintage, shorts été, blazers, manteaux.</p><p><strong>Grades :</strong> Grade A (très bon état), Grade B (bon état, quelques défauts), Vintage (à plus de 20 ans).</p><hr><h2>Le partenariat DressKare</h2><p><strong>1 box achetée = 1 box offerte</strong></p><p>Ton coût réel est divisé par deux. 80&euro; = 2 boxes, soit 50 pièces à 1,60&euro;/pièce. Prix de vente d’une veste cuir : 35-60&euro;. Marge nette : 30-50&euro; par pièce.</p><hr><h2>Comment intégrer dans DressKare</h2><ol><li>Tu crées un dépôt (type « achat-revente »)</li><li>Tu renseignes ton prix d’achat pour chaque article</li><li>L’IA suggère les prix de vente</li><li>Tu publies sur Vinted via l’extension Chrome</li><li>DressKare suit automatiquement ta marge par article et par box</li></ol><hr><h2>Conseils avant de commander</h2><ul><li>Commence petit — teste avec 1 box avant d’en commander 5</li><li>Vérifie les prix Vinted (filtre « vendus ») pour t’assurer qu’il y a une vraie demande</li><li>Combine avec le dépôt-vente — les boxes comblent les creux</li></ul><hr><h2>À retenir</h2><blockquote>Le partenariat French Pick &times; DressKare (1 box achetée = 1 box offerte) rend le sourcing achat-revente accessible et rentable. Commence par une box premium (cuir, vintage, trench) pour maximiser les marges dès le départ.</blockquote>", "quiz": [{"q": "Quel est l’avantage du partenariat DressKare &times; French Pick ?", "opts": ["Livraison gratuite sur toutes les boxes", "1 box achetée = 1 box offerte, ce qui divise le coût réel par deux", "Accès à des boxes exclusives non disponibles au grand public", "Remboursement garanti si la box est décevante"], "ok": 1}, {"q": "Quelles boxes French Pick offrent les meilleures marges par article ?", "opts": ["Les boxes t-shirts et basiques", "Les boxes enfants", "Les boxes premium : vestes cuir vintage, trench, blazers", "Toutes les boxes ont les mêmes marges"], "ok": 2}, {"q": "Comment intègre-t-on une box French Pick dans DressKare ?", "opts": ["On ne peut pas — DressKare ne gère que le dépôt-vente", "On la rentre comme un dépôt d’achat-revente avec le prix d’achat par article", "On importe automatiquement via une API French Pick", "On crée une boutique séparée dans DressKare"], "ok": 1}], "exercise": "<p><strong>Avant de commander ta première box :</strong></p><ol><li>Choisis un type de box qui t’intéresse (ex : vestes cuir vintage)</li><li>Va sur Vinted, cherche ce type d’article, filtre sur « vendus »</li><li>Note les 10 dernières ventes : prix, état, rapidité de vente</li><li>Calcule ta marge potentielle avec la promo DressKare</li><li>Décide si ça vaut le coup — et si oui, commande</li></ol>"}, {"id": "l26", "title": "Évaluer une pièce — la règle du tiers", "type": "Analyse rentabilité", "duree": "15 min", "body": "<h2>Introduction</h2><p>Acheter ou accepter une pièce sans méthode, c’est jouer à pile ou face. Cette leçon te donne une grille de décision simple que tu peux appliquer en 60 secondes à n’importe quel article.</p><hr><h2>La règle du tiers</h2><p><strong>Prix d’achat maximum = 1/3 du prix de vente visé</strong></p><ul><li>Tu vises 15&euro; &rarr; tu payes maximum 5&euro;</li><li>Tu vises 30&euro; &rarr; tu payes maximum 10&euro;</li><li>Tu vises 60&euro; &rarr; tu payes maximum 20&euro;</li></ul><p>Ce ratio te laisse de la marge pour les frais Vinted, le temps passé, et le risque que l’article mette du temps à se vendre.</p><hr><h2>Comment vérifier le prix de vente réaliste</h2><ol><li>Ouvre Vinted sur ton téléphone</li><li>Recherche l’article : marque + type (ex : « Zara blazer beige »)</li><li>Filtre sur <strong>« Vendus »</strong> — regarde les 5 à 10 dernières ventes</li></ol><p>Ce que tu vois dans les « vendus » est la vérité du marché. Pas ce que les gens espèrent vendre — ce qui a réellement été acheté.</p><hr><h2>La grille des 5 critères</h2><p>Un article qui ne coche pas au moins 4 critères sur 5 &rarr; tu passes.</p><ul><li><strong>Marque reconnue :</strong> Zara, Mango, H&amp;M, Nike, Levi’s, Sézane, Sandro, Maje... &check; / Shein, Primark, Gémo, Kiabi... &cross;</li><li><strong>Très bon état :</strong> pas de trou, pas de tache, coutures intactes</li><li><strong>Marge suffisante :</strong> la règle du tiers donne une marge nette acceptable</li><li><strong>Taille standard :</strong> S, M, L, 36, 38, 40 ont la meilleure rotation</li><li><strong>Rotation rapide :</strong> les « vendus » datent de moins de 30 jours</li></ul><hr><h2>Exemples réels</h2><p><strong>Blazer Zara, taille 38, très bon état, 3&euro; au vide-grenier</strong><br>Ventes Vinted 18-25&euro;, 5 critères sur 5 &rarr; <strong>Achète</strong></p><p><strong>Robe Shein, taille M, neuve, gratuit</strong><br>Ventes 3-5&euro;, 2 critères sur 5 &rarr; <strong>Refuse</strong> même si c’est gratuit</p><p><strong>Manteau Maje, taille 40, légère usure, 25&euro;</strong><br>Ventes 60-80&euro;, 4 critères sur 5 &rarr; <strong>Négocie à 15&euro; maximum</strong></p><hr><h2>À retenir</h2><blockquote>Règle du tiers + grille des 5 critères = ta protection contre les mauvais achats. Un article qui ne coche pas 4 critères sur 5, tu passes sans regret.</blockquote>", "quiz": [{"q": "Avec la règle du tiers, quel est le prix d’achat maximum pour un article que tu espères vendre 45&euro; ?", "opts": ["20&euro;", "15&euro;", "22,50&euro;", "10&euro;"], "ok": 1}, {"q": "Où doit-on vérifier le prix de vente réaliste d’un article avant de l’acheter ?", "opts": ["Sur le site de la marque", "Sur Google Shopping", "Dans les ventes récentes (filtre ‘vendus’) sur Vinted", "En demandant à d’autres vendeurs Vinted"], "ok": 2}, {"q": "Un article Shein neuf est proposé gratuitement dans un dépôt. Que fais-tu ?", "opts": ["Tu l’acceptes — c’est gratuit donc pas de risque", "Tu l’acceptes mais tu le vends très bon marché", "Tu le refuses — marge nulle, rotation quasi inexistante, image négative", "Tu le gardes pour toi"], "ok": 2}], "exercise": "<p><strong>Applique la grille à 5 articles réels :</strong></p><ol><li>Prends 5 articles autour de toi (dressing, dépôt, ou articles envisagés)</li><li>Pour chacun, recherche les ventes récentes sur Vinted (filtre « vendus »)</li><li>Applique la règle du tiers : calcule le prix d’achat maximum</li><li>Coche les 5 critères pour chaque article</li><li>Décide : achète / accepte / refuse / négocie</li></ol>"}]}, {"id": 3, "emoji": "📸", "title": "Photos & Mannequin IA", "short": "Photos", "color": "#fce7f3", "tc": "#9d174d", "lessons": []}, {"id": 4, "emoji": "🚀", "title": "Publication & Algorithme", "short": "Publication", "color": "#fef3c7", "tc": "#92400e", "lessons": []}, {"id": 5, "emoji": "📈", "title": "Scaler son activité", "short": "Scaler", "color": "#fee2e2", "tc": "#b91c1c", "lessons": []}, {"id": 6, "emoji": "📱", "title": "Stratégie Instagram", "short": "Instagram", "color": "#fdf4ff", "tc": "#7e22ce", "lessons": []}, {"id": 7, "emoji": "🛒", "title": "Boutique Shopify", "short": "Shopify", "color": "#ecfdf5", "tc": "#065f46", "lessons": []}, {"id": 8, "emoji": "⚖️", "title": "Statut & Légal", "short": "Légal", "color": "#ede9fe", "tc": "#6d28d9", "lessons": []}];
+const TOTAL = DATA.reduce((a,b)=>a+b.lessons.length,0);
+
+// Clear old state on version change
+const VER = 'dk10';
+let S = {user:'',view:'home',cur:null,done:{},ans:{},sub:{}};
+function sv(){try{localStorage.setItem(VER,JSON.stringify(S));}catch(e){}}
+function ld(){try{const d=localStorage.getItem(VER);if(d)Object.assign(S,JSON.parse(d));}catch(e){}}
+ld();
+
+const pct=()=>TOTAL?Math.round(Object.keys(S.done).length/TOTAL*100):0;
+function unlocked(bi,li){
+  if(bi===0&&li===0)return true;
+  for(let b=0;b<=bi;b++){const maxL=b===bi?li:DATA[b].lessons.length;for(let l=0;l<maxL;l++)if(!S.done[DATA[b].lessons[l]?.id])return false;}
+  return true;
+}
+
+// ── AUTH ──
+document.getElementById('btnlogin').onclick=doLogin;
+document.getElementById('iname').onkeydown=e=>{if(e.key==='Enter')doLogin();};
+document.getElementById('btnlo').onclick=doLogout;
+
+function doLogin(){
+  const n=document.getElementById('iname').value.trim();
+  if(!n){document.getElementById('iname').focus();return;}
+  S.user=n;sv();
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').classList.add('visible');
+  boot();
+}
+function doLogout(){
+  S.user='';sv();
+  document.getElementById('login').style.display='flex';
+  document.getElementById('app').classList.remove('visible');
+  document.getElementById('iname').value='';
+}
+
+// Auto-login if returning user
+if(S.user){
+  document.getElementById('login').style.display='none';
+  document.getElementById('app').classList.add('visible');
+  boot();
+}
+
+function boot(){
+  document.getElementById('sbu').textContent='Bonjour '+S.user+' \u{1F44B}';
+  renderSB();
+  if(S.view==='lesson'&&S.cur)goLesson(S.cur.bi,S.cur.lid);
+  else showHome();
+}
+
+// ── SIDEBAR ──
+function renderSB(){
+  document.getElementById('spct').textContent=pct()+'%';
+  document.getElementById('pfil').style.width=pct()+'%';
+  let h=`<div class="nhome ${S.view==='home'?'act':''}" onclick="showHome()">\u{1F3E0} Accueil</div>`;
+  DATA.forEach((bloc,bi)=>{
+    h+=`<div class="nbl">${bloc.emoji} ${bloc.short}</div>`;
+    if(!bloc.lessons.length){
+      h+=`<div class="nl lk"><div class="nd" style="background:#f0f0ee;color:#b0aca6;font-size:8px">\u2736</div><div class="nt" style="color:#b0aca6;font-size:10.5px">\u00c0 venir</div></div>`;
+      return;
+    }
+    bloc.lessons.forEach((l,li)=>{
+      const uk=unlocked(bi,li),dn=!!S.done[l.id],act=S.cur?.lid===l.id;
+      const [bg,tc]=dn?['#dcfce7','#15803d']:act?['#dbeafe','#2952e3']:!uk?['#f0f0ee','#b0aca6']:['#f0f0ee','#6b6762'];
+      h+=`<div class="nl ${act?'act':''} ${!uk?'lk':''}" ${uk?`onclick="goLesson(${bi},'${l.id}')"`:''}><div class="nd" style="background:${bg};color:${tc}">${dn?'\u2713':!uk?'\u{1F512}':li+1}</div><div class="nt">${l.title}</div></div>`;
+    });
+  });
+  document.getElementById('sbn').innerHTML=h;
+}
+
+// ── HOME ──
+function showHome(){
+  S.view='home';S.cur=null;sv();renderSB();
+  const items=DATA.map((b,bi)=>`<div class="bi" onclick="goFirst(${bi})"><div class="be">${b.emoji}</div><div><div class="bt">Bloc ${b.id} \u2014 ${b.title}</div><div class="bs">${b.lessons.length} le\u00e7on${b.lessons.length!==1?'s':''}</div></div></div>`).join('');
+  document.getElementById('main').innerHTML=`
+    <div class="hh">
+      <h1>Bienvenue dans<br><em>Dresskool</em></h1>
+      <p>La formation compl\u00e8te pour structurer une activit\u00e9 de revente professionnelle sur Vinted avec DressKare.</p>
+      <div class="htags"><span class="htag">8 blocs</span><span class="htag">9 le\u00e7ons</span><span class="htag">Quiz d\u00e9di\u00e9s</span><span class="htag">Exercices terrain</span></div>
+    </div>
+    <div class="hcard"><h3>Les 8 blocs de la formation</h3><div class="bgrid">${items}</div></div>
+    <button class="btnst" onclick="goFirst(0)">Commencer le Bloc 1 \u2192</button>`;
+}
+function goFirst(bi){const b=DATA[bi];if(b?.lessons.length)goLesson(bi,b.lessons[0].id);}
+
+// ── LESSON ──
+function goLesson(bi,lid){
+  const bloc=DATA[bi],li=bloc.lessons.findIndex(l=>l.id===lid);
+  if(li<0)return;
+  if(!unlocked(bi,li)){
+    S.view='lesson';S.cur={bi,lid};sv();renderSB();
+    document.getElementById('main').innerHTML='<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:12px;text-align:center"><div style="font-size:48px">\u{1F512}</div><div style="font-family:\'DM Serif Display\',serif;font-size:22px">Module verrouill\u00e9</div><div style="font-size:14px;color:#9a9590;max-width:280px;line-height:1.6">Valide les le\u00e7ons pr\u00e9c\u00e9dentes pour d\u00e9bloquer ce contenu.</div></div>';
+    return;
+  }
+  S.view='lesson';S.cur={bi,lid};sv();renderSB();
+  const l=bloc.lessons[li];
+  const dn=!!S.done[lid],sub=!!S.sub[lid],ans=S.ans[lid]||[null,null,null];
+
+  const qItems=l.quiz.map((q,qi)=>{
+    const opts=q.opts.map((opt,oi)=>{
+      let cls='';
+      if(sub||dn){cls=oi===q.ok?'ok':oi===ans[qi]&&oi!==q.ok?'ng':'fz';}
+      else if(ans[qi]===oi)cls='sl';
+      const dot=(sub||dn)&&oi===q.ok?'\u2713':(sub||dn)&&oi===ans[qi]&&oi!==q.ok?'\u2717':ans[qi]===oi?'\u25cf':'';
+      return `<div class="qo ${cls}" data-qi="${qi}" data-oi="${oi}"><div class="od">${dot}</div>${opt}</div>`;
+    }).join('');
+    return `<div class="qq"><div class="qn">Question ${qi+1} / ${l.quiz.length}</div><div class="qt">${q.q}</div>${opts}</div>`;
+  }).join('');
+
+  const allAns=ans.every(a=>a!==null);
+  let res='';
+  if(dn)res='<div class="rdn">\u2705 Le\u00e7on valid\u00e9e\u00a0!</div><button class="btnnx" onclick="nextLesson()">Le\u00e7on suivante \u2192</button>';
+  else if(sub){
+    const sc=l.quiz.filter((q,qi)=>ans[qi]===q.ok).length;
+    res=sc>=2
+      ?`<div class="rok">\u{1F389} ${sc}/${l.quiz.length} \u2014 Le\u00e7on valid\u00e9e\u00a0!</div><button class="btnnx" onclick="nextLesson()">Le\u00e7on suivante \u2192</button>`
+      :`<div class="rng">\u{1F605} ${sc}/${l.quiz.length} \u2014 Il faut 2/3 minimum. Relis la le\u00e7on et <button class="btnrt" onclick="retryQuiz('${lid}',${bi})">r\u00e9essaye</button>.</div>`;
+  }
+
+  document.getElementById('main').innerHTML=`
+    <div class="lbadge" style="background:${bloc.color};color:${bloc.tc}">${bloc.emoji} Bloc ${bloc.id} \u2014 ${bloc.short}</div>
+    <div class="ltit">${l.title}</div>
+    <div class="lmeta"><span>\u{1F4D6} ${l.type}</span><span>\u23f1 ${l.duree}</span></div>
+    <div class="lbody">${l.body}</div>
+    <div class="qbox" id="qbox">
+      <div class="qhdr"><div class="qico">\u{1F393}</div><div><div class="qtit">Quiz de validation</div><div class="qsub">2 bonnes r\u00e9ponses sur 3 pour valider et d\u00e9bloquer la suite</div></div></div>
+      ${qItems}
+      ${!sub&&!dn?`<button class="btnsub" id="btnsub" ${allAns?'':'disabled'}>Valider mes r\u00e9ponses</button>`:''}
+      ${res}
+    </div>
+    <div class="exbox"><div class="exl">\u{1F3AF} Exercice pratique</div><div class="ext">\u00c0 faire maintenant</div><div class="exb">${l.exercise}</div></div>
+    <div style="height:60px"></div>`;
+
+  // Quiz events
+  document.querySelectorAll('.qo').forEach(el=>{
+    el.addEventListener('click',()=>{
+      if(S.sub[lid]||S.done[lid])return;
+      const qi=+el.dataset.qi,oi=+el.dataset.oi;
+      if(!S.ans[lid])S.ans[lid]=[null,null,null];
+      S.ans[lid][qi]=oi;sv();
+      el.closest('.qq').querySelectorAll('.qo').forEach((o,i)=>{
+        o.className='qo'+(i===oi?' sl':'');
+        o.querySelector('.od').textContent=i===oi?'\u25cf':'';
+      });
+      const btn=document.getElementById('btnsub');
+      if(btn)btn.disabled=!S.ans[lid].every(a=>a!==null);
+    });
+  });
+
+  document.getElementById('btnsub')?.addEventListener('click',()=>{
+    const myAns=S.ans[lid]||[];
+    const sc=l.quiz.filter((q,qi)=>myAns[qi]===q.ok).length;
+    S.sub[lid]=true;if(sc>=2)S.done[lid]=true;sv();renderSB();
+    const box=document.getElementById('qbox');
+    box.querySelectorAll('.qq').forEach((qEl,qi)=>{
+      qEl.querySelectorAll('.qo').forEach((o,oi)=>{
+        o.className='qo '+(oi===l.quiz[qi].ok?'ok':oi===myAns[qi]&&oi!==l.quiz[qi].ok?'ng':'fz');
+        o.querySelector('.od').textContent=oi===l.quiz[qi].ok?'\u2713':oi===myAns[qi]&&oi!==l.quiz[qi].ok?'\u2717':'';
+      });
+    });
+    document.getElementById('btnsub')?.remove();
+    const resDiv=document.createElement('div');
+    if(sc>=2){
+      resDiv.className='rok';
+      resDiv.textContent=`\u{1F389} ${sc}/${l.quiz.length} \u2014 Le\u00e7on valid\u00e9e\u00a0!`;
+      box.appendChild(resDiv);
+      const nb=document.createElement('button');nb.className='btnnx';
+      nb.textContent='Le\u00e7on suivante \u2192';nb.onclick=nextLesson;box.appendChild(nb);
+    }else{
+      resDiv.className='rng';
+      resDiv.innerHTML=`\u{1F605} ${sc}/${l.quiz.length} \u2014 Il faut 2/3 minimum. Relis la le\u00e7on et <button class="btnrt" onclick="retryQuiz('${lid}',${bi})">r\u00e9essaye</button>.`;
+      box.appendChild(resDiv);
+    }
+  });
+
+  document.querySelector('.ct').scrollTop=0;
+}
+
+function retryQuiz(lid,bi){S.ans[lid]=[null,null,null];S.sub[lid]=false;sv();goLesson(bi,lid);}
+function nextLesson(){
+  if(!S.cur)return;
+  const {bi,lid}=S.cur,bloc=DATA[bi],li=bloc.lessons.findIndex(l=>l.id===lid);
+  if(li<bloc.lessons.length-1)goLesson(bi,bloc.lessons[li+1].id);
+  else if(bi<DATA.length-1){const nb=DATA[bi+1];if(nb.lessons.length)goLesson(bi+1,nb.lessons[0].id);else showHome();}
+  else showHome();
+}
+
+</script>
+</body>
+</html>
