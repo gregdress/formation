@@ -208,7 +208,7 @@ nav .btn{padding:12px 22px;font-size:14px}
 .faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease;color:#6b7280;font-size:14px;line-height:1.6}
 .faq-item.open .faq-a{max-height:400px}
 .faq-a-inner{padding:0 22px 16px}
-@media(max-width:768px){.faq-list{grid-template-columns:1fr}}
+@media(max-width:768px){.faq-list{grid-template-columns:1fr}section .container > div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important}}
 
 /* ── FINAL CTA ── */
 .final-cta{background:#0f172a;color:#fff;text-align:center;padding:120px 0;position:relative;overflow:hidden}
@@ -436,14 +436,6 @@ footer p{margin-bottom:6px}
       <div class="problem-card"><div class="problem-icon">😰</div><h3>L'admin te bloque</h3><p>Micro-entrepreneur, Vinted Pro, fiscalité… ça te paraît compliqué et tu repousses depuis des mois.</p></div>
       <div class="problem-card"><div class="problem-icon">🌀</div><h3>Tu n'as pas de méthode</h3><p>Tu vends « quand tu as le temps », sans process ni objectif chiffré. Résultat : ça stagne.</p></div>
     </div>
-  </div>
-</section>
-
-<!-- ── PROMISE ── -->
-<section class="promise">
-  <div class="container">
-    <blockquote>Lancer une activité structurée de vente professionnelle sur Vinted et viser un revenu mensuel plus stable grâce à une méthode simple — et à l'utilisation de DressKare.</blockquote>
-    <a href="https://www.skool.com/formation-dresskare-5948" target="_blank" rel="noopener" class="btn btn-primary">Rejoindre la communauté gratuitement →</a>
   </div>
 </section>
 
@@ -715,18 +707,18 @@ footer p{margin-bottom:6px}
         <div class="demo-article"><div class="demo-thumb">👖</div><strong>Jean Levi's</strong><span>18€ · Publiée ✓</span></div>
         <div class="demo-article"><div class="demo-thumb">👜</div><strong>Sac Longchamp</strong><span>45€ · Publiée ✓</span></div>
       </div>
-      <div class="demo-status">3 annonces publiées en 4 min 22s</div>
+      <div class="demo-status">30 annonces publiées en 2 min</div>
     </div>
   </div>
 </section>
 
-<!-- ── CHALLENGE ── -->
-<section class="alt">
+<!-- ── CHALLENGE (supprimé) ── -->
+<section class="alt" style="display:none">
   <div class="container">
     <div class="section-head">
       <div class="section-eyebrow">Challenge fil rouge</div>
       <h2 class="section-title">14 jours pour <em>passer à l'action</em></h2>
-      <p class="section-sub">Une mini-action par jour, 30 minutes maximum. À la fin, ton stock est en ligne et ton système tourne — le tout avec 2 mois d'essai DressKare inclus.</p>
+      <p class="section-sub">Une mini-action par jour, 30 minutes maximum.</p>
     </div>
     <div class="challenge-grid">
       <div class="challenge-step"><div class="challenge-day">J1</div><div class="challenge-text">Créer & configurer DressKare</div></div>
@@ -801,9 +793,39 @@ footer p{margin-bottom:6px}
   </div>
 </section>
 
-<!-- ── FAQ ── -->
+<!-- ── FAQ + LEAD MAGNETS ── -->
 <section class="alt">
   <div class="container">
+
+    <!-- Ressources gratuites -->
+    <div class="section-head">
+      <div class="section-eyebrow">Ressources gratuites</div>
+      <h2 class="section-title">Commence <em>gratuitement</em></h2>
+      <p class="section-sub">Pas encore prête à rejoindre Dresskool ? Récupère nos ressources gratuites et avance à ton rythme.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:960px;margin:0 auto 80px">
+      <div class="lead" id="leadMagnet" style="padding:36px 32px;margin:0">
+        <div class="lead-badge">🧮 Gratuit</div>
+        <h3 style="font-size:24px">Simulateur de <em>rentabilité Vinted</em></h3>
+        <p style="font-size:14px;margin-bottom:20px">Calcule ton objectif mensuel réaliste — le même outil qu'on utilise dans le Bloc 1 de la formation.</p>
+        <form onsubmit="handleLead(event)">
+          <input type="email" placeholder="ton@email.fr" required>
+          <button type="submit" class="btn btn-primary plausible-event-name=Lead+Simulateur">Recevoir</button>
+        </form>
+        <div class="lead-thx">✓ Merci ! Le simulateur arrive par mail.</div>
+      </div>
+      <div class="lead" id="leadGuide" style="padding:36px 32px;margin:0">
+        <div class="lead-badge" style="background:#0086c6">📘 Gratuit</div>
+        <h3 style="font-size:24px">Guide <em>Devenir vendeur pro</em></h3>
+        <p style="font-size:14px;margin-bottom:20px">Le guide complet pour structurer ton activité de vente sur Vinted — les bases à connaître avant de te lancer.</p>
+        <form onsubmit="handleGuide(event)">
+          <input type="email" placeholder="ton@email.fr" required>
+          <button type="submit" class="btn btn-primary plausible-event-name=Lead+Guide">Recevoir</button>
+        </form>
+        <div class="lead-thx">✓ Merci ! Le guide arrive par mail.</div>
+      </div>
+    </div>
+
     <div class="section-head">
       <div class="section-eyebrow">FAQ</div>
       <h2 class="section-title">Les questions <em>qu'on nous pose</em></h2>
@@ -853,21 +875,6 @@ footer p{margin-bottom:6px}
   </div>
 </section>
 
-<!-- ── LEAD MAGNET ── -->
-<section>
-  <div class="container">
-    <div class="lead" id="leadMagnet">
-      <div class="lead-badge">🎁 Gratuit</div>
-      <h3>Télécharge le <em>Simulateur de rentabilité Vinted</em></h3>
-      <p>Pas encore prête à rejoindre Dresskool ? Récupère gratuitement notre simulateur Google Sheets pour calculer ton objectif mensuel réaliste (le même qu'on utilise dans le Bloc 1).</p>
-      <form onsubmit="handleLead(event)">
-        <input type="email" placeholder="ton@email.fr" required>
-        <button type="submit" class="btn btn-primary plausible-event-name=Lead+Magnet">Recevoir le simulateur</button>
-      </form>
-      <div class="lead-thx">✓ Merci ! Le simulateur arrive dans ta boîte mail dans quelques minutes.</div>
-    </div>
-  </div>
-</section>
 
 <!-- ── FINAL CTA ── -->
 <section class="final-cta">
@@ -958,8 +965,15 @@ function handleLead(e){
   e.preventDefault();
   const email=e.target.querySelector('input').value;
   try{localStorage.setItem('dresskool_lead',email);}catch(_){}
-  if(window.plausible)plausible('Lead Magnet Submit');
+  if(window.plausible)plausible('Lead Simulateur Submit');
   document.getElementById('leadMagnet').classList.add('sent');
+}
+function handleGuide(e){
+  e.preventDefault();
+  const email=e.target.querySelector('input').value;
+  try{localStorage.setItem('dresskool_guide',email);}catch(_){}
+  if(window.plausible)plausible('Lead Guide Submit');
+  document.getElementById('leadGuide').classList.add('sent');
 }
 function handleExit(e){
   e.preventDefault();
