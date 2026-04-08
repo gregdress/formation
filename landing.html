@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dresskool — Structure ton activité Vinted et génère un vrai revenu</title>
+<meta name="description" content="La micro-formation pour vendeuses Vinted qui veulent passer de quelques ventes à un revenu mensuel structuré grâce à DressKare.">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & BASE ── */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:#fdfaf6;color:#2a2018;line-height:1.6;font-weight:400;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+.container{max-width:1140px;margin:0 auto;padding:0 24px}
+h1,h2,h3,h4{font-family:'Playfair Display',serif;font-weight:700;line-height:1.15;color:#2a2018}
+h1 em,h2 em,h3 em{font-style:italic;color:#e8614a}
+section{padding:96px 0}
+.alt{background:#f8f3ec}
+
+/* ── BUTTONS ── */
+.btn{display:inline-block;padding:16px 32px;border-radius:50px;font-weight:700;font-size:15px;transition:all .25s;text-align:center;letter-spacing:.2px}
+.btn-primary{background:#e8614a;color:#fff;box-shadow:0 8px 24px rgba(232,97,74,.28)}
+.btn-primary:hover{background:#d4533d;transform:translateY(-2px);box-shadow:0 12px 32px rgba(232,97,74,.35)}
+.btn-secondary{background:transparent;color:#2a2018;border:2px solid #e2d9cc}
+.btn-secondary:hover{border-color:#2a2018;background:#fff}
+
+/* ── NAV STICKY ── */
+nav{position:fixed;top:0;left:0;right:0;background:rgba(253,250,246,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(226,217,204,.5);z-index:100;padding:16px 0}
+nav .container{display:flex;justify-content:space-between;align-items:center}
+.logo{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:#2a2018}
+.logo em{font-style:italic;color:#e8614a}
+nav .btn{padding:12px 24px;font-size:14px}
+
+/* ── HERO ── */
+.hero{padding:160px 0 96px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;right:-200px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(232,97,74,.08),transparent 70%);z-index:0}
+.hero::after{content:'';position:absolute;bottom:-150px;left:-150px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(90,122,94,.08),transparent 70%);z-index:0}
+.hero .container{position:relative;z-index:1}
+.hero-fade{opacity:0;transform:translateY(20px);animation:fadeUp .8s forwards}
+.hero-badge{display:inline-block;padding:8px 18px;background:rgba(232,97,74,.1);color:#e8614a;border-radius:50px;font-size:13px;font-weight:700;margin-bottom:24px;letter-spacing:.4px;text-transform:uppercase;animation-delay:.05s}
+.hero h1{font-size:62px;max-width:880px;margin:0 auto 24px;letter-spacing:-1.5px;animation-delay:.15s}
+.hero-sub{font-size:20px;color:#7a6f62;max-width:680px;margin:0 auto 40px;line-height:1.55;animation-delay:.3s}
+.hero-cta{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:32px;animation-delay:.45s}
+.hero-proof{display:flex;align-items:center;justify-content:center;gap:12px;color:#7a6f62;font-size:14px;animation-delay:.6s}
+.stars{color:#d4a847;font-size:18px;letter-spacing:2px}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+
+/* ── STATS BAR ── */
+.stats{background:#2a2018;color:#fdfaf6;padding:60px 0}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;text-align:center}
+.stat-num{font-family:'Playfair Display',serif;font-size:54px;font-weight:900;color:#e8614a;line-height:1;margin-bottom:8px}
+.stat-label{font-size:13px;color:#bcb0a0;text-transform:uppercase;letter-spacing:1px;font-weight:600}
+
+/* ── PROBLEM ── */
+.section-head{text-align:center;margin-bottom:64px}
+.section-eyebrow{display:inline-block;color:#e8614a;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px}
+.section-title{font-size:46px;max-width:720px;margin:0 auto 18px;letter-spacing:-.8px}
+.section-sub{font-size:18px;color:#7a6f62;max-width:600px;margin:0 auto;line-height:1.55}
+.problem-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:880px;margin:0 auto}
+.problem-card{background:#fff;border-left:4px solid #e8614a;border-radius:8px;padding:32px;box-shadow:0 4px 20px rgba(42,32,24,.04);opacity:0;transform:translateY(20px);transition:all .6s}
+.problem-card.visible{opacity:1;transform:translateY(0)}
+.problem-icon{font-size:32px;margin-bottom:14px}
+.problem-card h3{font-size:22px;margin-bottom:8px}
+.problem-card p{color:#7a6f62;font-size:15px}
+
+/* ── PROMISE ── */
+.promise{background:linear-gradient(135deg,#5a7a5e 0%,#3e5a42 100%);color:#fdfaf6;text-align:center}
+.promise blockquote{font-family:'Playfair Display',serif;font-style:italic;font-size:38px;line-height:1.3;max-width:880px;margin:0 auto 32px;font-weight:700;letter-spacing:-.5px}
+.promise blockquote::before{content:'"';font-size:80px;display:block;line-height:.4;margin-bottom:20px;color:#d4a847;opacity:.6}
+.promise .btn-primary{background:#fdfaf6;color:#2a2018;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.promise .btn-primary:hover{background:#fff;color:#e8614a}
+
+/* ── FOR WHO ── */
+.who-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:960px;margin:0 auto}
+.who-col{background:#fff;border-radius:16px;padding:40px;box-shadow:0 4px 20px rgba(42,32,24,.05);opacity:0;transform:translateY(20px);transition:all .6s}
+.who-col.visible{opacity:1;transform:translateY(0)}
+.who-col.yes{border-top:4px solid #5a7a5e}
+.who-col.no{border-top:4px solid #c44}
+.who-col h3{font-size:24px;margin-bottom:24px;display:flex;align-items:center;gap:12px}
+.who-col.yes h3::before{content:'✓';display:inline-flex;width:36px;height:36px;background:#5a7a5e;color:#fff;border-radius:50%;align-items:center;justify-content:center;font-size:18px;font-weight:900}
+.who-col.no h3::before{content:'✗';display:inline-flex;width:36px;height:36px;background:#c44;color:#fff;border-radius:50%;align-items:center;justify-content:center;font-size:18px;font-weight:900}
+.who-col ul{list-style:none}
+.who-col li{padding:12px 0;border-bottom:1px solid #f0e8db;color:#5a4f42;font-size:15px}
+.who-col li:last-child{border-bottom:none}
+
+/* ── PROGRAM ACCORDION ── */
+.program-list{max-width:880px;margin:0 auto}
+.program-item{background:#fff;border-radius:12px;margin-bottom:16px;overflow:hidden;box-shadow:0 4px 16px rgba(42,32,24,.04);opacity:0;transform:translateY(20px);transition:all .6s}
+.program-item.visible{opacity:1;transform:translateY(0)}
+.program-header{padding:28px 32px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:20px;transition:background .2s}
+.program-header:hover{background:#fdfaf6}
+.program-num{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:#e8614a;flex-shrink:0;width:50px}
+.program-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;flex:1;line-height:1.3}
+.program-toggle{width:36px;height:36px;border-radius:50%;background:#f8f3ec;display:flex;align-items:center;justify-content:center;font-size:20px;color:#e8614a;flex-shrink:0;transition:transform .3s;font-weight:700}
+.program-item.open .program-toggle{transform:rotate(45deg);background:#e8614a;color:#fff}
+.program-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.program-item.open .program-body{max-height:600px}
+.program-content{padding:0 32px 32px 32px;color:#5a4f42;font-size:15px}
+.program-content ul{margin:12px 0 16px 20px}
+.program-content li{margin-bottom:8px}
+.program-mission{background:#f8f3ec;border-left:3px solid #d4a847;padding:14px 18px;border-radius:6px;margin-top:14px;font-size:14px;color:#7a6f62}
+.program-mission strong{color:#2a2018}
+.program-item.challenge .program-num{color:#5a7a5e}
+.program-item.challenge .program-toggle{color:#5a7a5e}
+.program-item.challenge.open .program-toggle{background:#5a7a5e}
+
+/* ── CHALLENGE ── */
+.challenge-section{background:linear-gradient(135deg,#fdfaf6 0%,#f8f3ec 100%);position:relative}
+.challenge-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;max-width:1040px;margin:0 auto}
+.challenge-step{background:#fff;border-radius:14px;padding:28px 18px;text-align:center;box-shadow:0 4px 20px rgba(42,32,24,.06);opacity:0;transform:translateY(20px);transition:all .6s;border-top:4px solid #5a7a5e}
+.challenge-step.visible{opacity:1;transform:translateY(0)}
+.challenge-step.final{border-top-color:#d4a847;background:#fffaf0}
+.challenge-day{font-family:'Playfair Display',serif;font-size:32px;font-weight:900;color:#5a7a5e;margin-bottom:8px}
+.challenge-step.final .challenge-day{color:#d4a847;font-size:36px}
+.challenge-text{font-size:13px;color:#5a4f42;line-height:1.5;font-weight:600}
+
+/* ── PRICE ── */
+.price-card{max-width:520px;margin:0 auto;background:#fff;border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(42,32,24,.12);opacity:0;transform:translateY(20px);transition:all .6s}
+.price-card.visible{opacity:1;transform:translateY(0)}
+.price-head{background:#e8614a;color:#fff;padding:40px;text-align:center}
+.price-head h3{color:#fff;font-size:28px;margin-bottom:12px}
+.price-amount{font-family:'Playfair Display',serif;font-size:72px;font-weight:900;line-height:1;margin:16px 0 8px}
+.price-amount sup{font-size:32px;vertical-align:top;margin-right:4px}
+.price-tag{font-size:14px;opacity:.9;font-weight:600}
+.price-body{padding:40px}
+.price-body ul{list-style:none;margin-bottom:32px}
+.price-body li{padding:14px 0;border-bottom:1px solid #f0e8db;color:#5a4f42;font-size:15px;display:flex;align-items:center;gap:12px}
+.price-body li::before{content:'✓';width:24px;height:24px;background:rgba(90,122,94,.12);color:#5a7a5e;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0;font-size:13px}
+.price-body li:last-child{border-bottom:none}
+.price-body .btn{width:100%;padding:18px;font-size:16px}
+
+/* ── FAQ ── */
+.faq-list{max-width:760px;margin:0 auto}
+.faq-item{background:#fff;border-radius:12px;margin-bottom:14px;overflow:hidden;box-shadow:0 2px 12px rgba(42,32,24,.04)}
+.faq-q{padding:24px 28px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:20px;font-weight:700;font-size:17px;color:#2a2018;transition:background .2s}
+.faq-q:hover{background:#fdfaf6}
+.faq-toggle{font-size:24px;color:#e8614a;flex-shrink:0;transition:transform .3s;font-weight:300}
+.faq-item.open .faq-toggle{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease;color:#7a6f62;font-size:15px;line-height:1.7}
+.faq-item.open .faq-a{max-height:300px}
+.faq-a-inner{padding:0 28px 24px}
+
+/* ── FINAL CTA ── */
+.final-cta{background:#2a2018;color:#fdfaf6;text-align:center;padding:120px 0}
+.final-cta h2{color:#fdfaf6;font-size:54px;max-width:780px;margin:0 auto 24px;letter-spacing:-.8px}
+.final-cta h2 em{color:#d4a847}
+.final-cta p{font-size:19px;color:#bcb0a0;max-width:620px;margin:0 auto 40px;line-height:1.55}
+
+/* ── FOOTER ── */
+footer{background:#1a130d;color:#7a6f62;padding:48px 0;text-align:center;font-size:14px}
+footer .logo{color:#fdfaf6;margin-bottom:14px;display:inline-block}
+.footer-links{margin-top:14px}
+.footer-links a{margin:0 12px;color:#7a6f62;font-size:13px;transition:color .2s}
+.footer-links a:hover{color:#e8614a}
+
+/* ── MOBILE STICKY CTA ── */
+.mobile-sticky{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(253,250,246,.97);backdrop-filter:blur(12px);padding:14px 20px;box-shadow:0 -4px 24px rgba(0,0,0,.1);z-index:99;border-top:1px solid #e2d9cc}
+.mobile-sticky .btn{width:100%;padding:14px}
+.mobile-sticky.hidden{transform:translateY(100%);transition:transform .3s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  section{padding:64px 0}
+  .hero{padding:120px 0 64px}
+  .hero h1{font-size:40px}
+  .hero-sub{font-size:17px}
+  .section-title{font-size:34px}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:32px}
+  .stat-num{font-size:42px}
+  .problem-grid,.who-grid{grid-template-columns:1fr}
+  .promise blockquote{font-size:26px}
+  .challenge-grid{grid-template-columns:repeat(3,1fr)}
+  .program-header{padding:22px 20px;gap:14px}
+  .program-num{font-size:18px;width:34px}
+  .program-title{font-size:17px}
+  .program-content{padding:0 20px 24px}
+  .price-amount{font-size:60px}
+  .final-cta h2{font-size:36px}
+  .mobile-sticky{display:block}
+  nav .btn{display:none}
+  body{padding-bottom:80px}
+}
+@media(max-width:480px){
+  .hero h1{font-size:32px}
+  .section-title{font-size:28px}
+  .promise blockquote{font-size:22px}
+  .challenge-grid{grid-template-columns:repeat(2,1fr)}
+  .price-head{padding:32px 24px}
+  .price-body{padding:32px 24px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="container">
+    <div class="logo">Dress<em>kool</em></div>
+    <a href="#inscription" class="btn btn-primary">Je m'inscris – 79€</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-badge hero-fade">Formation Vinted Pro</div>
+    <h1 class="hero-fade">Transforme tes ventes Vinted en <em>vrai revenu mensuel</em></h1>
+    <p class="hero-sub hero-fade">La méthode simple pour structurer ton activité, publier en volume avec DressKare et viser 300€ à 1500€/mois — sans y passer tes soirées.</p>
+    <div class="hero-cta hero-fade">
+      <a href="#inscription" class="btn btn-primary">Je m'inscris – 79€</a>
+      <a href="#programme" class="btn btn-secondary">Voir le programme</a>
+    </div>
+    <div class="hero-proof hero-fade">
+      <span class="stars">★★★★★</span>
+      <span>Pensée pour les vendeuses Vinted déjà actives</span>
+    </div>
+  </div>
+</header>
+
+<!-- ── STATS ── -->
+<section class="stats" style="padding:60px 0">
+  <div class="container">
+    <div class="stats-grid">
+      <div><div class="stat-num" data-target="5">0</div><div class="stat-label">Blocs de formation</div></div>
+      <div><div class="stat-num" data-target="14">0</div><div class="stat-label">Jours de challenge</div></div>
+      <div><div class="stat-num"><sup style="font-size:30px">€</sup><span data-target="79">0</span></div><div class="stat-label">Accès à vie</div></div>
+      <div><div class="stat-num" data-target="15">0</div><div class="stat-label">Vidéos + PDF</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROBLEM ── -->
+<section class="alt">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">Le constat</div>
+      <h2 class="section-title">Vendre sur Vinted, <em>tu sais déjà faire</em></h2>
+      <p class="section-sub">Mais entre quelques ventes par-ci par-là et un vrai revenu, il y a un fossé. Tu le ressens probablement comme ça :</p>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-card"><div class="problem-icon">⏳</div><h3>Tu perds un temps fou</h3><p>Photos, descriptions, négociations… chaque annonce te prend une éternité. Et tu publies trop peu pour que ça décolle.</p></div>
+      <div class="problem-card"><div class="problem-icon">📉</div><h3>Tes revenus sont instables</h3><p>Un bon mois, puis trois calmes. Impossible de prévoir quoi que ce soit, encore moins de compter dessus.</p></div>
+      <div class="problem-card"><div class="problem-icon">😰</div><h3>L'admin te bloque</h3><p>Micro-entrepreneur, Vinted Pro, fiscalité… ça te paraît compliqué et tu repousses depuis des mois.</p></div>
+      <div class="problem-card"><div class="problem-icon">🌀</div><h3>Tu n'as pas de méthode</h3><p>Tu vends « quand tu as le temps », sans process ni objectif chiffré. Résultat : ça stagne.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROMISE ── -->
+<section class="promise">
+  <div class="container">
+    <blockquote>Lancer une activité structurée de vente professionnelle sur Vinted et viser un revenu mensuel plus stable grâce à une méthode simple — et à l'utilisation de DressKare.</blockquote>
+    <a href="#inscription" class="btn btn-primary">Je veux structurer mon activité</a>
+  </div>
+</section>
+
+<!-- ── FOR WHO ── -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">Pour qui</div>
+      <h2 class="section-title">Cette formation est faite <em>pour toi si…</em></h2>
+    </div>
+    <div class="who-grid">
+      <div class="who-col yes">
+        <h3>C'est pour toi</h3>
+        <ul>
+          <li>Tu vends déjà sur Vinted (quelques ventes minimum)</li>
+          <li>Tu veux générer 300€ à 1500€/mois en complément</li>
+          <li>Tu veux une méthode claire, pas des théories</li>
+          <li>Tu es prête à publier en volume et à structurer</li>
+          <li>Tu veux passer Vinted Pro proprement</li>
+        </ul>
+      </div>
+      <div class="who-col no">
+        <h3>Ce n'est pas pour toi</h3>
+        <ul>
+          <li>Tu débutes et n'as jamais vendu sur Vinted</li>
+          <li>Tu cherches du dropshipping ou du business passif</li>
+          <li>Tu ne veux pas investir 30 min/jour pendant 14 jours</li>
+          <li>Tu refuses tout outil digital pour publier</li>
+          <li>Tu cherches une promesse irréaliste type 10K€/mois</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROGRAMME ── -->
+<section class="alt" id="programme">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">Le programme</div>
+      <h2 class="section-title">5 blocs concrets <em>+ un challenge fil rouge</em></h2>
+      <p class="section-sub">Chaque bloc se termine par une mission actionnable. Le Challenge 14 jours te fait passer à l'action dès la semaine 1.</p>
+    </div>
+    <div class="program-list">
+
+      <div class="program-item open">
+        <div class="program-header" onclick="togglePrg(this)">
+          <div class="program-num">01</div>
+          <div class="program-title">Comprendre le business modèle</div>
+          <div class="program-toggle">+</div>
+        </div>
+        <div class="program-body"><div class="program-content">
+          <ul>
+            <li>Comment fonctionne vraiment l'argent sur Vinted (marge, rotation, volume, temps)</li>
+            <li>Sortir du mode « je vends quand j'ai le temps » → logique revenu structuré</li>
+            <li>Simulateur de rentabilité : objectif mensuel réaliste</li>
+          </ul>
+          <div class="program-mission"><strong>🎯 Mission :</strong> définir ton objectif (300€, 800€, 1500€/mois)</div>
+        </div></div>
+      </div>
+
+      <div class="program-item">
+        <div class="program-header" onclick="togglePrg(this)">
+          <div class="program-num">02</div>
+          <div class="program-title">Sourcing rentable</div>
+          <div class="program-toggle">+</div>
+        </div>
+        <div class="program-body"><div class="program-content">
+          <ul>
+            <li>Où sourcer efficacement sans gros budget</li>
+            <li>Comment reconnaître une pièce qui se vend vite</li>
+            <li>Règle du prix d'achat maximum pour sécuriser la marge</li>
+            <li>Checklist sourcing complète (marque, état, prix max, rotation)</li>
+          </ul>
+          <div class="program-mission"><strong>🎯 Mission :</strong> acheter 10 pièces avec la méthode</div>
+        </div></div>
+      </div>
+
+      <div class="program-item">
+        <div class="program-header" onclick="togglePrg(this)">
+          <div class="program-num">03</div>
+          <div class="program-title">Publier en volume avec DressKare</div>
+          <div class="program-toggle">+</div>
+        </div>
+        <div class="program-body"><div class="program-content">
+          <ul>
+            <li>Pourquoi publier souvent est <strong>la</strong> clé de la visibilité</li>
+            <li>Organisation du shooting en batch</li>
+            <li>Démo DressKare : création fiche, duplication, publication automatique</li>
+            <li>Workflow de publication pas à pas</li>
+          </ul>
+          <div class="program-mission"><strong>🎯 Mission clé :</strong> comparer publication manuelle vs DressKare sur 10 annonces</div>
+        </div></div>
+      </div>
+
+      <div class="program-item">
+        <div class="program-header" onclick="togglePrg(this)">
+          <div class="program-num">04</div>
+          <div class="program-title">Scaler et structurer son activité</div>
+          <div class="program-toggle">+</div>
+        </div>
+        <div class="program-body"><div class="program-content">
+          <ul>
+            <li>Le seuil critique : combien d'articles en ligne pour être rentable</li>
+            <li>Gérer les offres intelligemment</li>
+            <li>Routine hebdomadaire vendeur·se pro</li>
+            <li>Piloter avec DressKare : stock, suivi ventes, organisation</li>
+          </ul>
+          <div class="program-mission"><strong>🎯 Mission :</strong> définir ton volume cible et ton rythme hebdo</div>
+        </div></div>
+      </div>
+
+      <div class="program-item">
+        <div class="program-header" onclick="togglePrg(this)">
+          <div class="program-num">05</div>
+          <div class="program-title">Devenir Vinted Pro & sécuriser</div>
+          <div class="program-toggle">+</div>
+        </div>
+        <div class="program-body"><div class="program-content">
+          <ul>
+            <li>Statut micro-entrepreneur simplifié</li>
+            <li>Passage au compte Vinted Pro</li>
+            <li>Checklist administrative complète</li>
+          </ul>
+          <div class="program-mission"><strong>🎯 Mission :</strong> lancer tes démarches</div>
+        </div></div>
+      </div>
+
+      <div class="program-item challenge">
+        <div class="program-header" onclick="togglePrg(this)">
+          <div class="program-num">🔥</div>
+          <div class="program-title">Challenge 14 jours DressKare</div>
+          <div class="program-toggle">+</div>
+        </div>
+        <div class="program-body"><div class="program-content">
+          <ul>
+            <li><strong>Jour 1</strong> : créer et configurer DressKare</li>
+            <li><strong>Jours 2-3</strong> : publier 5 annonces</li>
+            <li><strong>Jours 4-7</strong> : atteindre 10-15 annonces en ligne</li>
+            <li><strong>Jours 8-14</strong> : maintenir le rythme, republier, optimiser</li>
+          </ul>
+          <div class="program-mission"><strong>🎯 Objectif final :</strong> 15 à 30 annonces publiées, système en place</div>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── CHALLENGE ── -->
+<section class="challenge-section">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow" style="color:#5a7a5e">Challenge fil rouge</div>
+      <h2 class="section-title">14 jours pour <em>passer à l'action</em></h2>
+      <p class="section-sub">Une mini-action par jour, 30 minutes maximum. À la fin, ton stock est en ligne et ton système tourne.</p>
+    </div>
+    <div class="challenge-grid">
+      <div class="challenge-step"><div class="challenge-day">J1</div><div class="challenge-text">Créer & configurer DressKare</div></div>
+      <div class="challenge-step"><div class="challenge-day">J3</div><div class="challenge-text">5 premières annonces publiées</div></div>
+      <div class="challenge-step"><div class="challenge-day">J7</div><div class="challenge-text">10-15 annonces en ligne</div></div>
+      <div class="challenge-step"><div class="challenge-day">J10</div><div class="challenge-text">Optimiser & republier</div></div>
+      <div class="challenge-step"><div class="challenge-day">J14</div><div class="challenge-text">Rythme installé</div></div>
+      <div class="challenge-step final"><div class="challenge-day">🎯</div><div class="challenge-text">15 à 30 annonces · système en place</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICE ── -->
+<section id="inscription">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">L'offre</div>
+      <h2 class="section-title">Un prix juste, <em>une seule fois</em></h2>
+      <p class="section-sub">Pas d'abonnement, pas de mensualité. Tu paies une fois et tu accèdes à tout, à vie.</p>
+    </div>
+    <div class="price-card">
+      <div class="price-head">
+        <h3>Formation Dresskool</h3>
+        <div class="price-amount"><sup>€</sup>79</div>
+        <div class="price-tag">Paiement unique · Accès à vie</div>
+      </div>
+      <div class="price-body">
+        <ul>
+          <li>5 blocs de formation structurés</li>
+          <li>15 vidéos + PDF téléchargeables</li>
+          <li>Simulateur de rentabilité</li>
+          <li>Checklists & templates prêts à l'emploi</li>
+          <li>Challenge 14 jours DressKare</li>
+          <li>Communauté Skool privée</li>
+          <li>1 live Q&amp;A mensuel</li>
+          <li>Mises à jour à vie</li>
+        </ul>
+        <a href="#" class="btn btn-primary">Je m'inscris maintenant – 79€</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section class="alt">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">FAQ</div>
+      <h2 class="section-title">Les questions <em>qu'on nous pose</em></h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Il faut déjà vendre sur Vinted ?<span class="faq-toggle">+</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Oui, quelques ventes minimum. Cette formation n'est pas pour les débutantes absolues — elle est pensée pour les vendeuses qui ont déjà mis le pied à l'étrier et veulent passer au niveau supérieur.</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Dois-je utiliser DressKare ?<span class="faq-toggle">+</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Facultatif pour les blocs 1 et 2, indispensable pour le Challenge 14 jours. C'est l'outil qui te permet de publier en volume — sans lui, le challenge perd l'essentiel de son intérêt.</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Combien de temps par semaine ?<span class="faq-toggle">+</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Formation courte et actionnable. Le Challenge propose 1 action par jour, souvent moins de 30 minutes. Tu avances à ton rythme, l'accès est à vie.</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">C'est quoi Skool ?<span class="faq-toggle">+</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Skool est une plateforme qui combine formation et communauté. Accès immédiat depuis mobile ou desktop, lecture des vidéos, échanges avec les autres membres et accès aux lives Q&amp;A.</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">L'accès est vraiment à vie ?<span class="faq-toggle">+</span></div>
+        <div class="faq-a"><div class="faq-a-inner">Oui. Paiement unique de 79€, pas d'abonnement caché, pas de renouvellement. Tu profites aussi de toutes les mises à jour futures gratuitement.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FINAL CTA ── -->
+<section class="final-cta">
+  <div class="container">
+    <h2>Tu vends déjà. <em>Maintenant, structure.</em></h2>
+    <p>79€ une seule fois pour passer de quelques ventes par mois à une vraie activité qui rapporte. Tu sais déjà que tu en es capable.</p>
+    <a href="#inscription" class="btn btn-primary" style="background:#e8614a;color:#fff;font-size:16px;padding:18px 40px">Je m'inscris à Dresskool – 79€</a>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="container">
+    <div class="logo">Dress<em>kool</em></div>
+    <div>© Dresskool by DressKare · Tous droits réservés</div>
+    <div class="footer-links">
+      <a href="#">Mentions légales</a>·
+      <a href="#">CGV</a>·
+      <a href="#">Politique de confidentialité</a>·
+      <a href="#">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ── MOBILE STICKY ── -->
+<div class="mobile-sticky" id="mobileSticky">
+  <a href="#inscription" class="btn btn-primary">Je m'inscris – 79€</a>
+</div>
+
+<script>
+/* ── ACCORDION PROGRAMME ── */
+function togglePrg(el){
+  const item=el.parentElement;
+  document.querySelectorAll('.program-item').forEach(p=>{if(p!==item)p.classList.remove('open');});
+  item.classList.toggle('open');
+}
+
+/* ── ACCORDION FAQ ── */
+function toggleFaq(el){
+  const item=el.parentElement;
+  document.querySelectorAll('.faq-item').forEach(p=>{if(p!==item)p.classList.remove('open');});
+  item.classList.toggle('open');
+}
+
+/* ── INTERSECTION OBSERVER (animations au scroll) ── */
+const io=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});
+},{threshold:.15});
+document.querySelectorAll('.problem-card,.who-col,.program-item,.challenge-step,.price-card').forEach(el=>io.observe(el));
+
+/* ── COMPTEURS ANIMÉS ── */
+const counterIO=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const el=e.target;
+    const target=parseInt(el.dataset.target,10);
+    let cur=0;const step=Math.max(1,Math.ceil(target/40));
+    const tick=()=>{cur+=step;if(cur>=target){el.textContent=target;}else{el.textContent=cur;requestAnimationFrame(tick);}};
+    tick();counterIO.unobserve(el);
+  });
+},{threshold:.5});
+document.querySelectorAll('[data-target]').forEach(el=>counterIO.observe(el));
+
+/* ── MOBILE STICKY : masquer au passage du footer ── */
+const sticky=document.getElementById('mobileSticky');
+const footer=document.querySelector('footer');
+const footerIO=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{sticky.classList.toggle('hidden',e.isIntersecting);});
+},{threshold:.1});
+footerIO.observe(footer);
+</script>
+
+</body>
+</html>
