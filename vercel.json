@@ -1,7 +1,20 @@
 {
   "headers": [
     {
-      "source": "/(.*)",
+      "source": "/(.*)\\.js",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/javascript; charset=utf-8"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)\\.html",
       "headers": [
         {
           "key": "Content-Type",
