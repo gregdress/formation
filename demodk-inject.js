@@ -288,14 +288,15 @@ function renderPanel(){
 
   // Position panel below button
   var btn=document.getElementById("dk-btn");
-  var panelTop="70px",panelLeft="auto",panelRight="20px";
+  var panelTop="70px",panelLeft="200px";
   if(btn){
     var r=btn.getBoundingClientRect();
     panelTop=(r.bottom+10)+"px";
-    panelRight=(window.innerWidth-r.right)+"px";
+    // Align panel left edge with button left, but ensure it stays on screen
+    panelLeft=Math.max(12,Math.min(r.left,window.innerWidth-420))+"px";
   }
 
-  var panel=h("div",{id:"dk-panel",className:"dk-open",style:"top:"+panelTop+";right:"+panelRight},[
+  var panel=h("div",{id:"dk-panel",className:"dk-open",style:"top:"+panelTop+";left:"+panelLeft},[
     h("div",{id:"dk-hdr"},[
       h("button",{id:"dk-cls",innerHTML:"&times;",onClick:closePanel}),
       h("h3",{textContent:"D\u00e9marrage avec DressKare"}),
