@@ -1,24 +1,25 @@
 /**
- * DémoDK v3 — Onboarding in-app pour app.dresskare.com
- * Sidebar gauche, #FFA944, 14 jours, relances, tours enrichis
+ * DemoDK v4 — Onboarding in-app pour app.dresskare.com
+ * Bouton en haut a cote de "Ajouter des articles", #FFA944, 14 jours, relances, tours enrichis
+ * Ordre: Navigation > Import > Extension > Republier > Ajouter articles > Automatisations > Commandes
  */
 (function(){
 "use strict";
 if(window.__DEMODK_LOADED__)return;
 window.__DEMODK_LOADED__=true;
 
-var C="#FFA944",SK="demodk_v3",DAYS=14;
+var C="#FFA944",SK="demodk_v4",DAYS=14;
 
-// ═══ STORAGE ═══
+// === STORAGE ===
 function ls(){try{return JSON.parse(localStorage.getItem(SK))||{}}catch(e){return{}}}
 function ss(o){localStorage.setItem(SK,JSON.stringify(o))}
 function gS(k){return ls()[k]}
 function sS(k,v){var o=ls();o[k]=v;ss(o)}
 
-// ═══ TRACKING ═══
+// === TRACKING ===
 function trk(e,d){if(window.dataLayer)window.dataLayer.push({event:e,source:"demodk"});console.log("[DemoDK]",e,d||"")}
 
-// ═══ HELPERS ═══
+// === HELPERS ===
 function h(tag,a,c){var e=document.createElement(tag);if(a)Object.keys(a).forEach(function(k){if(k==="className")e.className=a[k];else if(k==="innerHTML")e.innerHTML=a[k];else if(k==="textContent")e.textContent=a[k];else if(k==="style")e.style.cssText=a[k];else if(k.slice(0,2)==="on"&&typeof a[k]==="function")e.addEventListener(k.slice(2).toLowerCase(),a[k]);else e.setAttribute(k,a[k])});if(c)(Array.isArray(c)?c:[c]).forEach(function(x){if(!x)return;typeof x==="string"?e.appendChild(document.createTextNode(x)):e.appendChild(x)});return e}
 function fN(t){return Array.from(document.querySelectorAll(".v-navigation-drawer__content .v-list-item")).find(function(e){return e.textContent.trim().indexOf(t)===0})}
 function fB(t){return Array.from(document.querySelectorAll(".v-btn,button")).find(function(e){return e.textContent.trim().indexOf(t)!==-1})}
@@ -33,22 +34,24 @@ function navTo(navText,cb){
   if(item){item.click();setTimeout(cb||function(){},1200)}
   else if(cb)cb();
 }
-function navToUrl(url,cb){
-  window.location.href=url;
-  // cb will be called via tour restart on page load
-}
 
-// ═══ CSS ═══
+// === CSS ===
 var css=document.createElement("style");css.id="demodk-css";
 css.textContent=[
-// Guide button
-"#dk-btn{position:relative;cursor:pointer;transition:all .2s;padding:12px 14px !important;margin:6px 8px !important;border-radius:10px !important;background:"+C+" !important;color:#fff !important;font-weight:600 !important;font-size:13px !important;display:flex !important;align-items:center !important;gap:8px !important;border:none !important;width:calc(100% - 16px) !important;text-align:left !important;box-shadow:0 2px 12px rgba(255,169,68,.35) !important}",
+// Guide button - positioned in top header
+"#dk-btn{cursor:pointer;transition:all .2s;padding:8px 16px !important;border-radius:8px !important;background:"+C+" !important;color:#fff !important;font-weight:600 !important;font-size:13px !important;display:inline-flex !important;align-items:center !important;gap:8px !important;border:none !important;box-shadow:0 2px 10px rgba(255,169,68,.3) !important;white-space:nowrap !important;height:36px !important;vertical-align:middle !important;margin-left:8px !important}",
 "#dk-btn:hover{filter:brightness(1.05);transform:translateY(-1px)}",
-"#dk-btn .dk-cnt{background:rgba(255,255,255,.25);font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;margin-left:auto}",
-"@keyframes dkPulse{0%,100%{box-shadow:0 2px 12px rgba(255,169,68,.35)}50%{box-shadow:0 2px 20px rgba(255,169,68,.7)}}",
+"#dk-btn .dk-cnt{background:rgba(255,255,255,.25);font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px}",
+"@keyframes dkPulse{0%,100%{box-shadow:0 2px 10px rgba(255,169,68,.3)}50%{box-shadow:0 2px 22px rgba(255,169,68,.7)}}",
 "#dk-btn.dk-pulse{animation:dkPulse 2s ease infinite}",
+// Incitation bubble
+"#dk-bubble{position:fixed;z-index:99970;background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.15);padding:12px 16px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;animation:dkBubble .4s ease;max-width:260px;border-left:4px solid "+C+";display:flex;align-items:center;gap:10px}",
+"@keyframes dkBubble{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}",
+"#dk-bubble p{font-size:12px;color:#333;margin:0;line-height:1.4;flex:1}",
+"#dk-bubble .dk-bubble-x{background:none;border:none;color:#ccc;cursor:pointer;font-size:14px;padding:2px;flex-shrink:0}",
+"#dk-bubble .dk-bubble-x:hover{color:#888}",
 // Panel
-"#dk-panel{position:fixed;left:230px;bottom:50px;z-index:99975;width:400px;max-height:calc(100vh - 100px);background:#fff;border-radius:16px;box-shadow:0 12px 48px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;display:none;flex-direction:column;overflow:hidden;animation:dkU .3s ease}",
+"#dk-panel{position:fixed;z-index:99975;width:400px;max-height:calc(100vh - 100px);background:#fff;border-radius:16px;box-shadow:0 12px 48px rgba(0,0,0,.18);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;display:none;flex-direction:column;overflow:hidden;animation:dkU .3s ease}",
 "#dk-panel.dk-open{display:flex}",
 "@keyframes dkU{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}",
 // Header
@@ -88,7 +91,7 @@ css.textContent=[
 ".dk-bs{background:#f2f2f7;color:#555}.dk-bs:hover{background:#e8e8f0}",
 ".dk-arr{position:absolute;width:12px;height:12px;background:#fff;transform:rotate(45deg)}",
 ".dk-arr.dk-at{top:-6px;left:50%;margin-left:-6px}.dk-arr.dk-ab{bottom:-6px;left:50%;margin-left:-6px}.dk-arr.dk-al{left:-6px;top:50%;margin-top:-6px}.dk-arr.dk-ar{right:-6px;top:50%;margin-top:-6px}",
-// Popup / CTA relance
+// CTA relance popup
 "#dk-cta{position:fixed;left:100px;bottom:20px;z-index:99980;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.15);padding:16px 20px;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;animation:dkU .4s ease;max-width:300px;border-left:4px solid "+C+";display:flex;flex-direction:column;gap:8px}",
 "#dk-cta p{font-size:13px;color:#333;margin:0;line-height:1.4}",
 "#dk-cta .dk-cta-btn{background:"+C+";color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;align-self:flex-start}",
@@ -97,7 +100,7 @@ css.textContent=[
 ].join("\n");
 document.head.appendChild(css);
 
-// ═══ STATE ═══
+// === STATE ===
 var st={completed:gS("completed")||[],panelOpen:false,tour:null,step:0,els:[]};
 var firstSeen=gS("firstSeen");
 if(!firstSeen){firstSeen=new Date().toISOString();sS("firstSeen",firstSeen)}
@@ -105,62 +108,70 @@ function isExpired(){return(Date.now()-new Date(firstSeen).getTime())/(864e5)>DA
 function isDone(id){return st.completed.indexOf(id)!==-1}
 function complete(id){if(st.completed.indexOf(id)===-1){st.completed.push(id);sS("completed",st.completed);trk("onboarding_step_completed",{block_id:id});updateBtn();if(st.panelOpen)renderPanel()}}
 
-// ═══ BLOCS ═══
+// === BLOCS (ordre: nav > import > ext > repub > articles > auto > orders) ===
 var BL=[
-  // 0 - Menu
+  // 0 - Decouvrir le menu
   {id:"nav",num:"",label:"D\u00e9couvrir le menu",desc:"Familiarisez-vous avec l\u2019interface",route:null,
    steps:[
     {find:function(){return fN("Dashboard")},title:"Dashboard",body:"Votre <strong>page d\u2019accueil</strong> : statistiques, \u00e9tapes de d\u00e9marrage et derniers articles.",pos:"right"},
     {find:function(){return fN("Stock")},title:"Stock",body:"<strong>Tous vos articles</strong> sont ici. Importez, ajoutez, filtrez et g\u00e9rez votre inventaire.",pos:"right"},
     {find:function(){return fN("Republier")},title:"Republier",body:"Remettez vos articles <strong>en haut des r\u00e9sultats Vinted</strong> pour plus de visibilit\u00e9. Un levier puissant.",pos:"right"},
     {find:function(){return fN("Automatisation")},title:"Automatisation",body:"Messages automatiques, acceptation d\u2019offres, republication programm\u00e9e\u2026 <strong>Tout se configure ici.</strong>",pos:"right"},
-    {find:function(){return fN("Contacts")},title:"Contacts",body:"G\u00e9rez vos <strong>d\u00e9posants et clients</strong> si vous faites du d\u00e9p\u00f4t-vente.",pos:"right"},
-    {find:function(){return fN("Resell")},title:"Resell",body:"Acc\u00e9dez au march\u00e9 de <strong>lots et grossistes</strong> pour acheter du stock \u00e0 revendre.",pos:"right"},
+    {find:function(){return fN("Resell")},title:"Resell",body:"Le <strong>bot d\u2019achat/revente</strong> int\u00e9gr\u00e9 \u00e0 DressKare. Automatisez vos achats pour la revente.",pos:"right"},
     {find:function(){return fN("Suivi")},title:"Suivi de l\u2019activit\u00e9",body:"Retrouvez <strong>toutes vos commandes Vinted</strong>, vos exp\u00e9ditions et votre historique de ventes.",pos:"right"},
-    {find:function(){return fN("Guide")},title:"Guide DressKare",body:"Des <strong>tutos et guides</strong> pour ma\u00eetriser chaque fonctionnalit\u00e9 de DressKare.",pos:"right"},
     {find:function(){return fN("Param")},title:"Param\u00e8tres",body:"Configurez votre <strong>profil, prompts IA, mannequin IA, connecteurs</strong> et tarifs.",pos:"right"}
   ]},
 
-  // 1 - Import Vinted
-  {id:"import",num:"1",label:"Importer votre dressing Vinted",desc:"Republier imm\u00e9diatement + sauvegarder",route:"/repost",
+  // 1 - Importer votre dressing Vinted
+  {id:"import",num:"1",label:"Importer votre dressing Vinted",desc:"Sauvegardez et republiez vos articles",route:"/repost",
    steps:[
-    {find:function(){return fM("Importer tes articles Vinted")||fM("Importer mon Vinted")},title:"Importez votre dressing Vinted",body:"Collez l\u2019URL de votre profil Vinted pour <strong>importer jusqu\u2019\u00e0 1\u202f000 articles</strong> (hors brouillons, masqu\u00e9s ou vendus). Ils seront sauvegard\u00e9s et pr\u00eats \u00e0 republier.",pos:"bottom"},
-    {find:function(){return fB("Synchroniser ton Vinted")},title:"Synchronisez",body:"Cliquez ici pour <strong>lancer la synchronisation</strong>. Vos articles appara\u00eetront dans la liste ci-dessous.",pos:"bottom"},
-    {find:function(){return fB("Configurer la republication")},title:"Configurez la republication",body:"Une fois import\u00e9s, configurez la <strong>republication automatique</strong> pour remettre vos articles en haut des r\u00e9sultats Vinted r\u00e9guli\u00e8rement.",pos:"bottom"},
-    {find:function(){return fB("Republier")},title:"Republiez manuellement",body:"Vous pouvez aussi <strong>republier manuellement</strong> des articles s\u00e9lectionn\u00e9s quand vous le souhaitez.",pos:"bottom"}
+    {find:function(){return fM("Importer tes articles Vinted")||fM("Importer mon Vinted")||fM("Importer")},title:"Importez votre dressing Vinted",body:"Collez l\u2019URL de votre profil Vinted pour <strong>importer jusqu\u2019\u00e0 1\u202f000 articles</strong> (hors brouillons, masqu\u00e9s ou vendus). Ils seront sauvegard\u00e9s et pr\u00eats \u00e0 republier.<br><br><strong>Astuce :</strong> vous pouvez connecter <strong>plusieurs comptes Vinted</strong> pour g\u00e9rer tout au m\u00eame endroit.",pos:"bottom"},
+    {find:function(){return fB("Synchroniser ton Vinted")||fB("Synchroniser")},title:"Synchronisez",body:"Cliquez ici pour <strong>lancer la synchronisation</strong>. Vos articles appara\u00eetront dans la liste ci-dessous. L\u2019import peut prendre quelques minutes selon le nombre d\u2019articles.",pos:"bottom"}
   ]},
 
-  // 2 - Extension
-  {id:"ext",num:"2",label:"Installer l\u2019extension",desc:"Republication + suivi commandes",route:null,
+  // 2 - Installer l'extension
+  {id:"ext",num:"2",label:"Installer l\u2019extension Chrome",desc:"Import en 1 clic + republication + suivi",route:null,
    steps:[
-    {find:function(){return fM("Extension install")||fM("Extension")},title:"L\u2019extension Chrome DressKare",body:"L\u2019extension connecte DressKare \u00e0 Vinted. Elle permet l\u2019<strong>import en 1 clic</strong>, la <strong>republication</strong> et le <strong>suivi des commandes</strong> directement depuis Vinted.",pos:"bottom"}
+    {find:function(){return fB("Installer l\u2019extension")||fB("Extension")||fM("Extension")},title:"L\u2019extension Chrome DressKare",body:"L\u2019extension connecte DressKare \u00e0 Vinted. Elle permet l\u2019<strong>import en 1 clic</strong>, la <strong>republication</strong> et le <strong>suivi des commandes</strong> directement depuis Vinted.<br><br><strong>Aucun risque de ban</strong> : l\u2019extension respecte les conditions d\u2019utilisation de Vinted. Des milliers de vendeurs l\u2019utilisent quotidiennement.",pos:"bottom"}
   ]},
 
-  // 3 - Ajouter articles (tour riche multi-pages)
-  {id:"articles",num:"3",label:"Ajouter des articles",desc:"Fiche produit \u00b7 Prompts IA \u00b7 Mannequin \u00b7 Publier",route:"/stock",
+  // 3 - Republier vos articles (AVANT ajouter articles)
+  {id:"repub",num:"3",label:"Republier vos articles",desc:"Boostez votre visibilit\u00e9 en masse",route:"/repost",
    steps:[
-    {find:function(){return fB("Ajouter des articles")},title:"Ajoutez vos articles",body:"Cliquez ici pour <strong>ouvrir la fen\u00eatre d\u2019ajout</strong>. Vous pouvez ajouter des articles manuellement, par photo, ou via import.",pos:"bottom"},
+    {find:function(){return fM("Republier")||document.querySelector("h1")},title:"La page Republier",body:"Ici vous g\u00e9rez la <strong>republication de vos articles en masse</strong>. Republier remet vos annonces en haut des r\u00e9sultats Vinted automatiquement.",pos:"bottom"},
+    {find:function(){return fB("Configurer la republication")||fM("R\u00e8gles de republication")||fM("Configurer")},title:"Configurez les r\u00e8gles",body:"D\u00e9finissez les <strong>r\u00e8gles de republication</strong> : quels articles republier, \u00e0 quelle condition, et avec quels crit\u00e8res. DressKare s\u2019occupe du reste.",pos:"bottom"},
+    {find:function(){return fB("Republier")||fB("Tout republier")},title:"Republier en masse",body:"S\u00e9lectionnez vos articles et cliquez <strong>Republier</strong> pour les remettre en haut des r\u00e9sultats <strong>en masse</strong>. Plus besoin de le faire un par un.",pos:"bottom"}
+  ]},
+
+  // 4 - Ajouter des articles
+  {id:"articles",num:"4",label:"Ajouter des articles",desc:"Fiche produit \u00b7 Prompts IA \u00b7 Mannequin \u00b7 Publier",route:"/stock",
+   steps:[
+    {find:function(){
+      // Check if products exist in stock
+      var cards=document.querySelectorAll(".product-card-light,.v-card");
+      var hasProducts=cards.length>2; // threshold to detect real products vs empty state
+      if(hasProducts){
+        // Products exist - point to existing product
+        return cards[0];
+      }
+      return fB("Ajouter des articles")||fB("Ajouter");
+    },title:"Vos articles en stock",body:function(){
+      var cards=document.querySelectorAll(".product-card-light,.v-card");
+      if(cards.length>2){
+        return "Vous avez d\u00e9j\u00e0 des articles dans votre stock ! Cliquez sur un article pour voir sa <strong>fiche compl\u00e8te</strong> : photos, titre, description IA, prix, attributs et rendu mannequin.<br><br>Vous pouvez aussi <strong>ajouter de nouveaux articles</strong> manuellement ou par photo.";
+      }
+      return "Cliquez ici pour <strong>ajouter un article</strong>. Vous pouvez ajouter des articles manuellement, par photo, ou via import depuis Vinted.";
+    },pos:"bottom"},
     {find:function(){return fB("Publier")},title:"Publiez sur Vinted",body:"S\u00e9lectionnez vos articles puis cliquez <strong>Publier</strong> pour les mettre en ligne sur Vinted en un clic.",pos:"bottom"},
-    {find:function(){return document.querySelector(".product-card-light")},title:"La fiche produit",body:"Cliquez sur un article pour voir sa <strong>fiche compl\u00e8te</strong> : photos, titre, description IA, prix, attributs et rendu mannequin.",pos:"right"},
-    // These steps require navigation to settings - they show as info
     {find:function(){return fN("Param")},title:"Personnalisez vos prompts IA",body:"Dans <strong>Param\u00e8tres > Mes annonces</strong>, personnalisez comment l\u2019IA g\u00e9n\u00e8re vos titres et descriptions. Vous pouvez cr\u00e9er plusieurs templates.",pos:"right"},
     {find:function(){return fN("Param")},title:"Configurez le mannequin IA",body:"Dans <strong>Param\u00e8tres > Mannequin IA</strong>, configurez le genre, la morphologie, la posture et le fond pour vos photos mannequin.",pos:"right"}
-  ]},
-
-  // 4 - Republier
-  {id:"repub",num:"4",label:"Republier vos articles",desc:"Boostez votre visibilit\u00e9 sur Vinted",route:"/repost",
-   steps:[
-    {find:function(){return fM("Republier")||document.querySelector("h1")},title:"La page Republier",body:"Ici vous g\u00e9rez la <strong>republication de vos articles</strong>. Republier remet vos annonces en haut des r\u00e9sultats Vinted.",pos:"bottom"},
-    {find:function(){return fB("Configurer la republication")},title:"Configurez la republication",body:"D\u00e9finissez la <strong>fr\u00e9quence, les horaires et les r\u00e8gles</strong> de republication automatique. DressKare g\u00e8re tout pour vous.",pos:"bottom"},
-    {find:function(){return fB("Republier")},title:"Republication manuelle",body:"S\u00e9lectionnez des articles et cliquez <strong>Republier</strong> pour une republication imm\u00e9diate.",pos:"bottom"},
-    {find:function(){return fB("Synchroniser ton Vinted")},title:"Synchronisez r\u00e9guli\u00e8rement",body:"Gardez votre stock \u00e0 jour en <strong>synchronisant avec Vinted</strong>. Les articles vendus ou supprim\u00e9s sont retir\u00e9s automatiquement.",pos:"bottom"}
   ]},
 
   // 5 - Automatisations
   {id:"auto",num:"5",label:"Activer mes automatisations",desc:"Gagnez du temps au quotidien",route:"/automation",
    steps:[
-    {find:function(){return fM("Automatisez vos messages")||document.querySelector("h1")},title:"Vos automatisations",body:"DressKare propose <strong>5 automatisations pr\u00eates \u00e0 l\u2019emploi</strong>. Il suffit de les activer avec le switch.",pos:"bottom"},
-    {find:function(){return fM("Republication auto")},title:"Republication automatique",body:"<strong>Republie automatiquement</strong> vos articles selon la fr\u00e9quence que vous avez configur\u00e9e. Activez le switch pour d\u00e9marrer.",pos:"right"},
+    {find:function(){return fM("Automatisez vos messages")||fM("Automatisation")||document.querySelector("h1")},title:"Vos automatisations",body:"DressKare propose <strong>5 automatisations pr\u00eates \u00e0 l\u2019emploi</strong>. Il suffit de les activer avec le switch.",pos:"bottom"},
+    {find:function(){return fM("Republication auto")},title:"Republication automatique",body:"<strong>Republie automatiquement</strong> vos articles selon les r\u00e8gles que vous avez configur\u00e9es. Activez le switch pour d\u00e9marrer.",pos:"right"},
     {find:function(){return fM("Synchronisation des commandes")},title:"Synchro commandes",body:"<strong>Synchronise automatiquement</strong> vos commandes Vinted. Vous retrouvez tout dans le suivi d\u2019activit\u00e9.",pos:"right"},
     {find:function(){return fM("Remerciement apr")},title:"Remerciement apr\u00e8s vente",body:"Envoie un <strong>message de remerciement automatique</strong> \u00e0 chaque acheteur. Fid\u00e9lisez vos clients sans effort.",pos:"right"},
     {find:function(){return fM("Acceptation")},title:"Acceptation automatique",body:"<strong>Accepte ou refuse automatiquement</strong> les offres selon vos crit\u00e8res (ex: max -20%). Plus besoin de surveiller.",pos:"right"},
@@ -171,23 +182,43 @@ var BL=[
   // 6 - Commandes
   {id:"orders",num:"6",label:"Suivre mes commandes",desc:"Pilotez votre activit\u00e9",route:null,
    steps:[
-    {find:function(){return fN("Suivi")||fN("Mes commandes")},title:"Suivi de l\u2019activit\u00e9",body:"Cliquez ici pour acc\u00e9der \u00e0 <strong>toutes vos commandes Vinted</strong>, g\u00e9rer vos exp\u00e9ditions et suivre vos gains.",pos:"right"},
-    {find:function(){return fN("Mes commandes")||fM("Mes commandes")},title:"Mes commandes",body:"Retrouvez le <strong>d\u00e9tail de chaque commande</strong> : article, acheteur, prix, statut d\u2019exp\u00e9dition.",pos:"right"}
+    {find:function(){return fN("Suivi")},title:"Suivi de l\u2019activit\u00e9",body:"Cliquez sur <strong>Suivi de l\u2019activit\u00e9</strong> puis allez dans <strong>Mes commandes</strong> pour retrouver le d\u00e9tail de chaque vente : article, acheteur, prix, statut d\u2019exp\u00e9dition.",pos:"right"},
+    {find:function(){return fN("Mes commandes")||fTab("commandes")||fM("Mes commandes")},title:"Mes commandes",body:"Voici la page <strong>Mes commandes</strong>. Retrouvez le <strong>d\u00e9tail de chaque commande</strong>, g\u00e9rez vos exp\u00e9ditions et suivez vos gains.",pos:"right"}
   ]}
 ];
 
-// ═══ GUIDE BUTTON ═══
+// === GUIDE BUTTON (top header, next to "Ajouter des articles") ===
 function insertBtn(){
   if(document.getElementById("dk-btn"))return;
-  var append=document.querySelector(".v-navigation-drawer__append");
-  if(!append)return;
+
+  // Find the "Ajouter des articles" button in the header
+  var ajouterBtn=fB("Ajouter des articles")||fB("Ajouter mes articles");
+  var parent=null;
+
+  if(ajouterBtn){
+    parent=ajouterBtn.parentElement;
+  }
+
+  // Fallback: find toolbar/header area
+  if(!parent){
+    parent=document.querySelector(".v-toolbar__items")||document.querySelector(".v-app-bar .v-toolbar__content")||document.querySelector("header .v-toolbar__content");
+  }
+
+  if(!parent)return;
+
   var done=st.completed.length,total=BL.length,rem=total-done;
   var btn=h("button",{id:"dk-btn",className:rem===total?"dk-pulse":"",onClick:function(){togglePanel()}},[
-    h("span",{innerHTML:"&#128640;",style:"font-size:16px"}),
-    h("span",{textContent:"D\u00e9marrage",style:"flex:1"}),
+    h("span",{innerHTML:"&#128640;",style:"font-size:14px"}),
+    h("span",{textContent:"D\u00e9marrage",style:"font-size:13px"}),
     h("span",{className:"dk-cnt",textContent:rem>0?(rem+"/"+total):"\u2713"})
   ]);
-  append.insertBefore(btn,append.firstChild);
+
+  // Insert after ajouter button if found, otherwise append to parent
+  if(ajouterBtn&&ajouterBtn.nextSibling){
+    parent.insertBefore(btn,ajouterBtn.nextSibling);
+  } else {
+    parent.appendChild(btn);
+  }
 }
 function updateBtn(){
   var btn=document.getElementById("dk-btn");if(!btn)return;
@@ -197,8 +228,42 @@ function updateBtn(){
   btn.classList.toggle("dk-pulse",rem===total);
 }
 
-// ═══ PANEL ═══
-function togglePanel(){st.panelOpen=!st.panelOpen;st.panelOpen?(trk("checklist_opened"),renderPanel()):closePanel()}
+// === INCITATION BUBBLE ===
+function showBubble(){
+  if(document.getElementById("dk-bubble"))return;
+  var btn=document.getElementById("dk-btn");
+  if(!btn)return;
+  if(gS("bubbleDismissed"))return;
+  if(st.completed.length===BL.length)return;
+
+  var bubble=h("div",{id:"dk-bubble"},[
+    h("p",{innerHTML:"<strong>\uD83D\uDC4B Configurez votre compte !</strong><br>Cliquez ici pour suivre le guide de d\u00e9marrage."}),
+    h("button",{className:"dk-bubble-x",innerHTML:"&times;",onClick:function(){bubble.remove();sS("bubbleDismissed",true)}})
+  ]);
+  document.body.appendChild(bubble);
+
+  // Position bubble below button
+  requestAnimationFrame(function(){
+    var r=btn.getBoundingClientRect();
+    bubble.style.top=(r.bottom+10)+"px";
+    bubble.style.left=Math.max(12,r.left+r.width/2-130)+"px";
+  });
+
+  // Auto-dismiss after 8 seconds
+  setTimeout(function(){
+    var b=document.getElementById("dk-bubble");
+    if(b)b.remove();
+  },8000);
+}
+
+// === PANEL ===
+function togglePanel(){
+  st.panelOpen=!st.panelOpen;
+  // Remove bubble when panel opens
+  var bubble=document.getElementById("dk-bubble");
+  if(bubble)bubble.remove();
+  st.panelOpen?(trk("checklist_opened"),renderPanel()):closePanel();
+}
 function closePanel(){st.panelOpen=false;var p=document.getElementById("dk-panel");if(p)p.remove()}
 function renderPanel(){
   var ex=document.getElementById("dk-panel");if(ex)ex.remove();
@@ -220,7 +285,17 @@ function renderPanel(){
       launchBlock(b);
     }},[h("div",{className:numCls,textContent:numTxt}),info]));
   });
-  var panel=h("div",{id:"dk-panel",className:"dk-open"},[
+
+  // Position panel below button
+  var btn=document.getElementById("dk-btn");
+  var panelTop="70px",panelLeft="auto",panelRight="20px";
+  if(btn){
+    var r=btn.getBoundingClientRect();
+    panelTop=(r.bottom+10)+"px";
+    panelRight=(window.innerWidth-r.right)+"px";
+  }
+
+  var panel=h("div",{id:"dk-panel",className:"dk-open",style:"top:"+panelTop+";right:"+panelRight},[
     h("div",{id:"dk-hdr"},[
       h("button",{id:"dk-cls",innerHTML:"&times;",onClick:closePanel}),
       h("h3",{textContent:"D\u00e9marrage avec DressKare"}),
@@ -239,10 +314,9 @@ function renderPanel(){
   document.body.appendChild(panel);
 }
 
-// ═══ LAUNCH BLOCK (navigate if needed, then tour) ═══
+// === LAUNCH BLOCK (navigate if needed, then tour) ===
 function launchBlock(b){
   if(b.route && window.location.pathname!==b.route){
-    // Navigate via sidebar
     var map={"/repost":"Republier","/automation":"Automatisation","/stock":"Stock","/":" Dashboard"};
     var navText=map[b.route];
     if(navText){
@@ -250,12 +324,21 @@ function launchBlock(b){
     } else {
       window.location.href=b.route;
     }
+  } else if(b.id==="orders"){
+    // For orders, navigate to Suivi then to Mes commandes sub-page
+    navTo("Suivi",function(){
+      setTimeout(function(){
+        var sub=fN("Mes commandes")||fTab("commandes");
+        if(sub)sub.click();
+        setTimeout(function(){startTour(b)},800);
+      },600);
+    });
   } else {
     startTour(b);
   }
 }
 
-// ═══ TOUR ═══
+// === TOUR ===
 function startTour(b){clearTour();st.tour=b;st.step=0;trk("tour_started",{block:b.id});renderStep()}
 function renderStep(){
   clearTour();var b=st.tour;if(!b)return;
@@ -276,11 +359,15 @@ function renderStep(){
     if(idx<tot-1)acts.appendChild(h("button",{className:"dk-b dk-bp",textContent:"Suivant",onClick:function(){st.step++;renderStep()}}));
     else acts.appendChild(h("button",{className:"dk-b dk-bp",textContent:"Termin\u00e9 \u2713",onClick:function(){endTour(true)}}));
     var ad={top:"ab",bottom:"at",left:"ar",right:"al"}[pos];
+
+    // Support dynamic body (function or string)
+    var bodyHtml=typeof sd.body==="function"?sd.body():sd.body;
+
     var tip=h("div",{className:"dk-tip"},[
       h("button",{className:"dk-x",innerHTML:"&times;",onClick:function(){endTour(false)}}),
       tot>1?h("div",{className:"dk-badge",textContent:"\u00c9tape "+(idx+1)+"/"+tot}):null,
       h("div",{className:"dk-ttl",textContent:sd.title}),
-      h("div",{className:"dk-bdy",innerHTML:sd.body}),
+      h("div",{className:"dk-bdy",innerHTML:bodyHtml}),
       h("div",{className:"dk-ftr"},[dots,acts]),
       h("div",{className:"dk-arr dk-"+ad})
     ]);
@@ -299,17 +386,16 @@ function renderStep(){
 function endTour(ok){clearTour();var b=st.tour;if(b&&ok)complete(b.id);else if(b)trk("tour_skipped",{block:b.id});st.tour=null;st.step=0}
 function clearTour(){st.els.forEach(function(e){e.remove()});st.els=[];if(st._rh)window.removeEventListener("resize",st._rh)}
 
-// ═══ CTA / RELANCE ═══
+// === CTA / RELANCE ===
 function showCTA(){
   if(document.getElementById("dk-cta"))return;
   var dismissed=gS("ctaDismissed")||0;
   var lastDismiss=gS("ctaLastDismiss")||0;
   var hoursSince=(Date.now()-lastDismiss)/(36e5);
 
-  // Show CTA if: first time, or every 24h, max 5 times
   if(dismissed>=5)return;
   if(dismissed>0 && hoursSince<24)return;
-  if(st.completed.length===BL.length)return; // all done
+  if(st.completed.length===BL.length)return;
 
   var msgs=[
     {title:"\uD83D\uDC4B Bienvenue !",text:"Suivez le guide pour <strong>configurer DressKare</strong> et commencer \u00e0 vendre en quelques minutes.",btn:"Commencer"},
@@ -328,27 +414,32 @@ function showCTA(){
   document.body.appendChild(cta);
 }
 
-// ═══ PUBLIC API ═══
+// === PUBLIC API ===
 window.DemoDK={
-  reset:function(){localStorage.removeItem(SK);st.completed=[];clearTour();document.querySelectorAll("#dk-btn,#dk-panel,#dk-cta,#demodk-css").forEach(function(e){e.remove()});window.__DEMODK_LOADED__=false;console.log("[DemoDK] Reset")},
+  reset:function(){localStorage.removeItem(SK);st.completed=[];clearTour();document.querySelectorAll("#dk-btn,#dk-panel,#dk-cta,#dk-bubble,#demodk-css").forEach(function(e){e.remove()});window.__DEMODK_LOADED__=false;console.log("[DemoDK] Reset")},
   complete:complete,
   startTour:function(id){var b=BL.find(function(x){return x.id===id});if(b)launchBlock(b)},
   openPanel:function(){if(!st.panelOpen)togglePanel()},
   showCTA:showCTA
 };
 
-// ═══ INIT ═══
+// === INIT ===
 function init(){
   if(isExpired())return;
   var attempts=0;
   var check=setInterval(function(){
     attempts++;
-    if(document.querySelector(".v-navigation-drawer__append")){
+    // Look for header area (toolbar) or "Ajouter des articles" button
+    var ajouterBtn=fB("Ajouter des articles")||fB("Ajouter mes articles");
+    var toolbar=document.querySelector(".v-toolbar__items")||document.querySelector(".v-app-bar .v-toolbar__content")||document.querySelector("header .v-toolbar__content");
+    if(ajouterBtn||toolbar){
       clearInterval(check);
       insertBtn();
       trk("onboarding_loaded");
-      // CTA relance après 3s
-      setTimeout(showCTA,3000);
+      // Show incitation bubble after 2s
+      setTimeout(showBubble,2000);
+      // CTA relance after 5s
+      setTimeout(showCTA,5000);
     }
     if(attempts>30)clearInterval(check);
   },500);
