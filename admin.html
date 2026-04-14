@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DemoDK Admin</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--orange:#FFA944;--blue:#4361ee;--dark:#1a1a2e;--gray:#6b7280;--light:#f8f9fb;--border:#e5e7eb;--radius:12px;--shadow:0 2px 12px rgba(0,0,0,.08)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--light);color:var(--dark);min-height:100vh}
+a{color:var(--blue);text-decoration:none}
+
+/* Layout */
+.layout{display:flex;min-height:100vh}
+.sidebar{width:260px;background:#fff;border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:10}
+.main{margin-left:260px;flex:1;padding:32px 40px;max-width:1100px}
+
+/* Sidebar */
+.logo{padding:24px 20px;font-size:20px;font-weight:800;color:var(--orange);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.logo span{font-size:24px}
+.nav{flex:1;padding:12px 0}
+.nav-section{padding:8px 20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray);margin-top:16px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:14px;font-weight:500;color:#555;cursor:pointer;transition:all .15s;border-left:3px solid transparent}
+.nav-item:hover{background:#fef9f3;color:var(--dark)}
+.nav-item.active{background:#fff5eb;color:var(--orange);border-left-color:var(--orange);font-weight:600}
+.nav-item .icon{width:20px;text-align:center;font-size:16px}
+.nav-item .badge{margin-left:auto;background:var(--orange);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px}
+.nav-footer{padding:16px 20px;border-top:1px solid var(--border);font-size:12px;color:var(--gray)}
+
+/* Header */
+.page-header{margin-bottom:28px}
+.page-header h1{font-size:24px;font-weight:700;margin-bottom:4px}
+.page-header p{color:var(--gray);font-size:14px}
+
+/* Cards */
+.card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);margin-bottom:20px;overflow:hidden}
+.card-header{padding:18px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.card-header h3{font-size:15px;font-weight:700}
+.card-body{padding:20px 22px}
+
+/* Toggle tabs */
+.tabs{display:flex;gap:4px;background:#f1f3f5;border-radius:10px;padding:4px;margin-bottom:24px;width:fit-content}
+.tab{padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;color:var(--gray)}
+.tab.active{background:#fff;color:var(--dark);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.tab:hover:not(.active){color:var(--dark)}
+
+/* Context toggle */
+.context-bar{display:flex;align-items:center;gap:16px;padding:14px 20px;background:#f0f7ff;border-radius:10px;margin-bottom:24px;border:1px solid #d0e3ff}
+.context-bar label{font-size:13px;font-weight:600;color:#2563eb}
+.context-bar select{padding:6px 12px;border-radius:6px;border:1px solid #bfdbfe;font-size:13px;background:#fff;font-weight:500}
+.context-info{font-size:12px;color:#6b93d6;margin-left:auto}
+
+/* Block list */
+.block{border:1px solid var(--border);border-radius:10px;margin-bottom:12px;background:#fff;transition:all .2s}
+.block:hover{border-color:#ccc;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.block-head{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;user-select:none}
+.block-head .drag{color:#ccc;cursor:grab;font-size:14px}
+.block-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:var(--orange);color:#fff;flex-shrink:0}
+.block-num.bullet{background:#e8e8f0;color:#888}
+.block-info{flex:1}
+.block-info .bl-label{font-size:14px;font-weight:600}
+.block-info .bl-desc{font-size:12px;color:var(--gray);margin-top:1px}
+.block-meta{display:flex;gap:8px;align-items:center}
+.block-meta .steps-count{font-size:11px;color:var(--gray);background:#f3f4f6;padding:3px 10px;border-radius:99px;font-weight:600}
+.block-toggle{background:none;border:none;cursor:pointer;font-size:18px;color:#aaa;transition:transform .2s;padding:4px}
+.block-toggle.open{transform:rotate(180deg)}
+.block-actions{display:flex;gap:4px}
+.block-actions button{background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:6px;font-size:13px;color:var(--gray);transition:all .15s}
+.block-actions button:hover{background:#f3f4f6;color:var(--dark)}
+
+/* Steps inside block */
+.block-body{display:none;border-top:1px solid var(--border);padding:16px 18px}
+.block-body.open{display:block}
+.step{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:8px;margin-bottom:8px;background:#fafbfc;border:1px solid transparent;transition:all .15s}
+.step:hover{border-color:var(--border);background:#fff}
+.step-num{width:22px;height:22px;border-radius:50%;background:#e8e8f0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#888;flex-shrink:0;margin-top:2px}
+.step-content{flex:1;min-width:0}
+.step-title{font-size:13px;font-weight:600;margin-bottom:2px}
+.step-body{font-size:12px;color:var(--gray);line-height:1.4;max-height:40px;overflow:hidden;text-overflow:ellipsis}
+.step-tags{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
+.step-tag{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:600}
+.step-tag.action{background:#fef3c7;color:#92400e}
+.step-tag.condition{background:#dbeafe;color:#1e40af}
+.step-tag.pos{background:#f0fdf4;color:#166534}
+.step-actions{display:flex;gap:2px;opacity:0;transition:opacity .15s}
+.step:hover .step-actions{opacity:1}
+.step-actions button{background:none;border:none;cursor:pointer;padding:4px;border-radius:4px;font-size:12px;color:#aaa}
+.step-actions button:hover{background:#f3f4f6;color:var(--dark)}
+
+/* Condition badge */
+.cond-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;margin-bottom:10px}
+.cond-badge.products{background:#dcfce7;color:#166534}
+.cond-badge.no-products{background:#fef9c3;color:#854d0e}
+
+/* Editor modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:16px;width:680px;max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1;border-radius:16px 16px 0 0}
+.modal-header h2{font-size:18px;font-weight:700}
+.modal-close{background:none;border:none;font-size:22px;cursor:pointer;color:#aaa;padding:4px 8px;border-radius:6px}
+.modal-close:hover{background:#f3f4f6;color:var(--dark)}
+.modal-body{padding:24px}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;position:sticky;bottom:0;background:#fff;border-radius:0 0 16px 16px}
+
+/* Form elements */
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--gray);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;transition:border-color .2s}
+.form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--orange)}
+.form-group textarea{min-height:80px;resize:vertical}
+.form-row{display:flex;gap:16px}
+.form-row .form-group{flex:1}
+.form-help{font-size:11px;color:#999;margin-top:4px}
+
+/* Buttons */
+.btn{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .2s;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--orange);color:#fff}
+.btn-primary:hover{filter:brightness(1.05)}
+.btn-secondary{background:#f3f4f6;color:#555}
+.btn-secondary:hover{background:#e5e7eb}
+.btn-danger{background:#fef2f2;color:#dc2626}
+.btn-danger:hover{background:#fee2e2}
+.btn-ghost{background:none;color:var(--gray);padding:6px 10px}
+.btn-ghost:hover{background:#f3f4f6;color:var(--dark)}
+.btn-sm{padding:6px 12px;font-size:12px}
+
+/* Empty state */
+.empty{text-align:center;padding:60px 20px}
+.empty .icon{font-size:48px;margin-bottom:16px}
+.empty h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.empty p{color:var(--gray);font-size:14px;max-width:400px;margin:0 auto 20px}
+
+/* Status */
+.status{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:99px;font-size:12px;font-weight:600}
+.status.live{background:#dcfce7;color:#166534}
+.status.draft{background:#f3f4f6;color:var(--gray)}
+
+/* Preview bar */
+.preview-bar{position:fixed;bottom:0;left:260px;right:0;background:#fff;border-top:1px solid var(--border);padding:12px 40px;display:flex;align-items:center;justify-content:space-between;z-index:50;box-shadow:0 -4px 12px rgba(0,0,0,.05)}
+.preview-bar .info{font-size:13px;color:var(--gray)}
+.preview-bar .info strong{color:var(--dark)}
+
+/* Responsive */
+@media(max-width:900px){
+  .sidebar{width:200px}
+  .main{margin-left:200px;padding:24px}
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="logo"><span>&#128640;</span> DemoDK</div>
+    <div class="nav">
+      <div class="nav-section">Experiences</div>
+      <div class="nav-item active" data-view="onboarding">
+        <span class="icon">&#127891;</span> Onboarding
+        <span class="badge">7</span>
+      </div>
+      <div class="nav-item" data-view="whats-new">
+        <span class="icon">&#9889;</span> Nouveautes
+        <span class="badge" style="background:#e8e8f0;color:#888">0</span>
+      </div>
+
+      <div class="nav-section">Configuration</div>
+      <div class="nav-item" data-view="settings">
+        <span class="icon">&#9881;</span> Parametres
+      </div>
+      <div class="nav-item" data-view="preview">
+        <span class="icon">&#128065;</span> Preview
+      </div>
+    </div>
+    <div class="nav-footer">
+      DemoDK v5 &middot; <a href="https://formation-sooty.vercel.app/demodk-inject.js" target="_blank">Script live</a>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="main" id="main-content">
+    <!-- Filled dynamically -->
+  </div>
+</div>
+
+<!-- Step Editor Modal -->
+<div class="modal-overlay" id="stepModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">Modifier l'etape</h2>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-primary" onclick="saveStep()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Block Editor Modal -->
+<div class="modal-overlay" id="blockModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="blockModalTitle">Modifier le bloc</h2>
+      <button class="modal-close" onclick="closeBlockModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="blockModalBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeBlockModal()">Annuler</button>
+      <button class="btn btn-primary" onclick="saveBlock()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================
+// DATA - Current onboarding configuration
+// ============================================
+var DATA = {
+  onboarding: {
+    name: "Onboarding nouveau vendeur",
+    status: "live",
+    experiences: {
+      "with-products": {
+        label: "Avec produits en stock",
+        description: "L'utilisateur a deja importe des articles",
+        blocks: [
+          {id:"nav",num:"",label:"Decouvrir le menu",desc:"Familiarisez-vous avec l'interface",route:null,
+           steps:[
+            {title:"Dashboard",body:"Votre page d'accueil : statistiques et derniers articles.",pos:"right",find:"fN('Dashboard')"},
+            {title:"Stock",body:"Tous vos articles sont ici. Importez, ajoutez, filtrez.",pos:"right",find:"fN('Stock')"},
+            {title:"Republier",body:"Remettez vos articles en haut des resultats Vinted.",pos:"right",find:"fN('Republier')"},
+            {title:"Automatisation",body:"Messages auto, acceptation d'offres, republication programmee.",pos:"right",find:"fN('Automatisation')"},
+            {title:"Contacts / Fournisseurs",body:"Gerez vos fournisseurs de vetements. Creez vos contacts, ajoutez des lots et gerez vos depots.",pos:"right",find:"fN('Contacts')"},
+            {title:"Depots / Lots",body:"Suivez vos depots de vetements recus de vos fournisseurs.",pos:"right",find:"fN('Depots')"},
+            {title:"Resell",body:"Le bot d'achat/revente integre a DressKare.",pos:"right",find:"fN('Resell')"},
+            {title:"Suivi de l'activite",body:"Toutes vos commandes Vinted, expeditions et historique.",pos:"right",find:"fN('Suivi')"},
+            {title:"Parametres",body:"Profil, prompts IA, mannequin IA, connecteurs et tarifs.",pos:"right",find:"fN('Param')"}
+          ]},
+          {id:"import",num:"1",label:"Importer votre dressing Vinted",desc:"Multi-compte et gestion profils",route:null,
+           steps:[
+            {title:"Vos articles sont deja importes !",body:"Vous avez deja des articles. Pour ajouter d'autres comptes Vinted, allez dans Parametres > Mes infos.",pos:"right",find:"fN('Param')"},
+            {title:"Multi-compte Vinted",body:"Dans Parametres > Mes infos, ajoutez plusieurs profils Vinted pour tout gerer depuis un seul endroit.",pos:"right",find:"fN('Param')"}
+          ]},
+          {id:"ext",num:"2",label:"Installer l'extension Chrome",desc:"Import en 1 clic + republication + suivi",route:null,
+           steps:[
+            {title:"L'extension Chrome DressKare",body:"Import en 1 clic, republication et suivi. Aucun risque de ban. Gardez toujours un onglet Vinted ouvert.",pos:"bottom",find:".extension-indicator"}
+          ]},
+          {id:"repub",num:"3",label:"Republier vos articles",desc:"Boostez votre visibilite en masse",route:"/repost",
+           steps:[
+            {title:"La page Republier",body:"Gerez la republication en masse pour augmenter la visibilite.",pos:"bottom"},
+            {title:"Les regles de republication",body:"Regles deja optimisees : renommage images, modification photos, regeneration IA, temps d'espacement.",pos:"bottom",action:"openConfigRepub"},
+            {title:"Republier en masse",body:"Selectionnez et republiez en un clic. Plus besoin de le faire un par un.",pos:"bottom"}
+          ]},
+          {id:"articles",num:"4",label:"Ajouter des articles",desc:"Fiche produit - Prompts IA - Mannequin - Publier",route:"/stock",
+           steps:[
+            {title:"Ajoutez vos articles",body:"Ouvrez la fenetre d'ajout : manuellement, par photo ou via import.",pos:"bottom",action:"openAddArticles"},
+            {title:"Les modes d'ajout",body:"Ajouter un article, en masse, importer CSV, ou depuis Vinted.",pos:"bottom"},
+            {title:"La fiche produit",body:"Cliquez sur un article pour voir sa fiche : photos, titre, description IA, prix.",pos:"right",action:"openProductCard"},
+            {title:"Publiez sur Vinted",body:"Selectionnez puis cliquez Publier pour mettre en ligne en un clic.",pos:"bottom"},
+            {title:"Personnalisez vos prompts IA",body:"Dans Parametres > Mes annonces, personnalisez les titres et descriptions IA.",pos:"right"},
+            {title:"Configurez le mannequin IA",body:"Dans Parametres > Mannequin IA, configurez genre, morphologie, posture.",pos:"right"}
+          ]},
+          {id:"auto",num:"5",label:"Activer mes automatisations",desc:"Gagnez du temps au quotidien",route:"/automation",
+           steps:[
+            {title:"Vos automatisations",body:"5 automatisations pretes a l'emploi. Activez avec le switch.",pos:"bottom"},
+            {title:"Republication automatique",body:"Republie selon vos regles configurees.",pos:"right"},
+            {title:"Synchro commandes",body:"Synchronise automatiquement vos commandes Vinted.",pos:"right"},
+            {title:"Remerciement apres vente",body:"Message de remerciement automatique a chaque acheteur.",pos:"right"},
+            {title:"Acceptation automatique",body:"Accepte ou refuse les offres selon vos criteres.",pos:"right"},
+            {title:"Message sur favori",body:"Message aux utilisateurs qui mettent en favori vos articles.",pos:"right"},
+            {title:"Creez les votres",body:"Creez vos propres automatisations personnalisees.",pos:"bottom"}
+          ]},
+          {id:"orders",num:"6",label:"Suivre mes commandes",desc:"Pilotez votre activite",route:"_orders",
+           steps:[
+            {title:"Mes commandes",body:"Toutes vos ventes Vinted avec le detail de chaque commande.",pos:"bottom"},
+            {title:"Importer les commandes",body:"Importez vos commandes depuis Vinted.",pos:"bottom"},
+            {title:"Exporter",body:"Exportez pour votre comptabilite ou suivi externe.",pos:"bottom"},
+            {title:"Imprimer les bordereaux",body:"Generez et imprimez vos bordereaux d'expedition.",pos:"bottom"},
+            {title:"Factures",body:"Acces a vos factures pour le suivi financier.",pos:"right"}
+          ]}
+        ]
+      },
+      "without-products": {
+        label: "Sans produits en stock",
+        description: "L'utilisateur vient de creer son compte, aucun article",
+        blocks: [
+          {id:"nav",num:"",label:"Decouvrir le menu",desc:"Familiarisez-vous avec l'interface",route:null,
+           steps:[
+            {title:"Dashboard",body:"Votre page d'accueil : statistiques et etapes de demarrage.",pos:"right",find:"fN('Dashboard')"},
+            {title:"Stock",body:"Tous vos articles seront ici. Importez ou ajoutez des articles.",pos:"right",find:"fN('Stock')"},
+            {title:"Republier",body:"Remettez vos articles en haut des resultats Vinted.",pos:"right",find:"fN('Republier')"},
+            {title:"Automatisation",body:"Messages auto, acceptation d'offres, republication programmee.",pos:"right",find:"fN('Automatisation')"},
+            {title:"Contacts / Fournisseurs",body:"Gerez vos fournisseurs de vetements. Creez vos contacts, ajoutez des lots et gerez vos depots.",pos:"right",find:"fN('Contacts')"},
+            {title:"Depots / Lots",body:"Suivez vos depots de vetements recus de vos fournisseurs.",pos:"right",find:"fN('Depots')"},
+            {title:"Resell",body:"Le bot d'achat/revente integre a DressKare.",pos:"right",find:"fN('Resell')"},
+            {title:"Suivi de l'activite",body:"Retrouvez toutes vos commandes Vinted et historique.",pos:"right",find:"fN('Suivi')"},
+            {title:"Parametres",body:"Profil, prompts IA, mannequin IA, connecteurs et tarifs.",pos:"right",find:"fN('Param')"}
+          ]},
+          {id:"import",num:"1",label:"Importer votre dressing Vinted",desc:"Sauvegardez et republiez vos articles",route:"/repost",
+           steps:[
+            {title:"Importez votre dressing Vinted",body:"Collez l'URL de votre profil Vinted pour importer jusqu'a 1000 articles. Vous pouvez connecter plusieurs comptes.",pos:"bottom"},
+            {title:"Lancez la synchronisation",body:"Cliquez ici pour lancer l'import. Peut prendre quelques minutes.",pos:"bottom"}
+          ]},
+          {id:"ext",num:"2",label:"Installer l'extension Chrome",desc:"Import en 1 clic + republication + suivi",route:null,
+           steps:[
+            {title:"L'extension Chrome DressKare",body:"Import en 1 clic, republication et suivi. Aucun risque de ban. Gardez toujours un onglet Vinted ouvert.",pos:"bottom",find:".extension-indicator"}
+          ]},
+          {id:"repub",num:"3",label:"Republier vos articles",desc:"Boostez votre visibilite en masse",route:"/repost",
+           steps:[
+            {title:"La page Republier",body:"Gerez la republication en masse. Augmente la visibilite de vos annonces.",pos:"bottom"},
+            {title:"Les regles de republication",body:"Regles deja optimisees : renommage images, modification photos, regeneration IA, temps d'espacement.",pos:"bottom",action:"openConfigRepub"},
+            {title:"Republier en masse",body:"Selectionnez vos articles et republiez en un clic.",pos:"bottom"}
+          ]},
+          {id:"articles",num:"4",label:"Ajouter des articles",desc:"Fiche produit - Prompts IA - Mannequin - Publier",route:"/stock",
+           steps:[
+            {title:"Ajoutez vos articles",body:"Cliquez pour ouvrir la fenetre d'ajout : manuellement, par photo ou via import.",pos:"bottom",action:"openAddArticles"},
+            {title:"Les modes d'ajout",body:"Ajouter un article, en masse, importer CSV, ou depuis Vinted.",pos:"bottom"},
+            {title:"Publiez sur Vinted",body:"Selectionnez puis cliquez Publier pour mettre en ligne.",pos:"bottom"},
+            {title:"Personnalisez vos prompts IA",body:"Dans Parametres > Mes annonces, personnalisez les titres et descriptions.",pos:"right"},
+            {title:"Configurez le mannequin IA",body:"Dans Parametres > Mannequin IA, configurez genre, morphologie, posture.",pos:"right"}
+          ]},
+          {id:"auto",num:"5",label:"Activer mes automatisations",desc:"Gagnez du temps au quotidien",route:"/automation",
+           steps:[
+            {title:"Vos automatisations",body:"5 automatisations pretes a l'emploi. Activez avec le switch.",pos:"bottom"},
+            {title:"Republication automatique",body:"Republie selon vos regles configurees.",pos:"right"},
+            {title:"Synchro commandes",body:"Synchronise automatiquement vos commandes Vinted.",pos:"right"},
+            {title:"Remerciement apres vente",body:"Message de remerciement automatique a chaque acheteur.",pos:"right"},
+            {title:"Acceptation automatique",body:"Accepte ou refuse les offres selon vos criteres.",pos:"right"},
+            {title:"Message sur favori",body:"Message aux utilisateurs qui mettent en favori vos articles.",pos:"right"},
+            {title:"Creez les votres",body:"Creez vos propres automatisations personnalisees.",pos:"bottom"}
+          ]},
+          {id:"orders",num:"6",label:"Suivre mes commandes",desc:"Pilotez votre activite",route:"_orders",
+           steps:[
+            {title:"Mes commandes",body:"Toutes vos ventes Vinted avec le detail de chaque commande.",pos:"bottom"},
+            {title:"Importer les commandes",body:"Importez vos commandes depuis Vinted.",pos:"bottom"},
+            {title:"Exporter",body:"Exportez pour votre comptabilite ou suivi externe.",pos:"bottom"},
+            {title:"Imprimer les bordereaux",body:"Generez et imprimez vos bordereaux d'expedition.",pos:"bottom"},
+            {title:"Factures",body:"Acces a vos factures pour le suivi financier.",pos:"right"}
+          ]}
+        ]
+      }
+    }
+  },
+  whatsNew: {
+    name: "Nouveautes & Features",
+    status: "draft",
+    announcements: []
+  }
+};
+
+// ============================================
+// STATE
+// ============================================
+var currentView = "onboarding";
+var currentContext = "with-products";
+var openBlocks = {};
+var editingStep = null;  // {blockIdx, stepIdx}
+var editingBlock = null; // {blockIdx}
+
+// ============================================
+// NAVIGATION
+// ============================================
+document.querySelectorAll('.nav-item').forEach(function(item) {
+  item.addEventListener('click', function() {
+    document.querySelectorAll('.nav-item').forEach(function(i){i.classList.remove('active')});
+    this.classList.add('active');
+    currentView = this.dataset.view;
+    render();
+  });
+});
+
+// ============================================
+// RENDER
+// ============================================
+function render() {
+  var main = document.getElementById('main-content');
+  switch(currentView) {
+    case 'onboarding': main.innerHTML = renderOnboarding(); break;
+    case 'whats-new': main.innerHTML = renderWhatsNew(); break;
+    case 'settings': main.innerHTML = renderSettings(); break;
+    case 'preview': main.innerHTML = renderPreview(); break;
+  }
+  bindEvents();
+}
+
+function renderOnboarding() {
+  var exp = DATA.onboarding.experiences[currentContext];
+  var blocks = exp.blocks;
+  var totalSteps = blocks.reduce(function(s,b){return s+b.steps.length},0);
+
+  var html = '<div class="page-header">';
+  html += '<h1>&#127891; Onboarding nouveau vendeur</h1>';
+  html += '<p>Guide interactif affiche aux nouveaux utilisateurs pendant 14 jours</p>';
+  html += '</div>';
+
+  // Context switcher
+  html += '<div class="context-bar">';
+  html += '<label>&#128100; Contexte utilisateur :</label>';
+  html += '<select id="contextSelect" onchange="switchContext(this.value)">';
+  html += '<option value="with-products"' + (currentContext==='with-products'?' selected':'') + '>&#9989; Avec produits en stock</option>';
+  html += '<option value="without-products"' + (currentContext==='without-products'?' selected':'') + '>&#128722; Sans produits (nouveau compte)</option>';
+  html += '</select>';
+  html += '<span class="context-info">' + blocks.length + ' blocs &middot; ' + totalSteps + ' etapes au total</span>';
+  html += '</div>';
+
+  // Status bar
+  html += '<div style="display:flex;gap:12px;margin-bottom:20px;align-items:center">';
+  html += '<span class="status live">&#9679; Actif en production</span>';
+  html += '<span style="font-size:12px;color:var(--gray)">Script : formation-sooty.vercel.app/demodk-inject.js</span>';
+  html += '<div style="margin-left:auto;display:flex;gap:8px">';
+  html += '<button class="btn btn-secondary btn-sm" onclick="addBlock()">+ Ajouter un bloc</button>';
+  html += '<button class="btn btn-primary btn-sm" onclick="exportConfig()">&#128190; Exporter JSON</button>';
+  html += '</div></div>';
+
+  // Blocks
+  blocks.forEach(function(block, i) {
+    var isOpen = openBlocks[currentContext + '_' + i];
+    html += '<div class="block" data-idx="' + i + '">';
+    html += '<div class="block-head" onclick="toggleBlock(' + i + ')">';
+    html += '<span class="drag">&#9776;</span>';
+    html += '<div class="block-num' + (block.num===''?' bullet':'') + '">' + (block.num||'&#8226;') + '</div>';
+    html += '<div class="block-info"><div class="bl-label">' + esc(block.label) + '</div>';
+    html += '<div class="bl-desc">' + esc(block.desc) + '</div></div>';
+    html += '<div class="block-meta">';
+    if(block.route) html += '<span class="step-tag pos">' + esc(block.route) + '</span>';
+    html += '<span class="steps-count">' + block.steps.length + ' etape' + (block.steps.length>1?'s':'') + '</span>';
+    html += '</div>';
+    html += '<div class="block-actions">';
+    html += '<button onclick="event.stopPropagation();editBlock(' + i + ')" title="Modifier">&#9998;</button>';
+    html += '<button onclick="event.stopPropagation();deleteBlock(' + i + ')" title="Supprimer">&#128465;</button>';
+    html += '</div>';
+    html += '<button class="block-toggle' + (isOpen?' open':'') + '">&#9660;</button>';
+    html += '</div>';
+
+    // Steps
+    html += '<div class="block-body' + (isOpen?' open':'') + '">';
+    block.steps.forEach(function(step, j) {
+      html += '<div class="step" data-block="' + i + '" data-step="' + j + '">';
+      html += '<div class="step-num">' + (j+1) + '</div>';
+      html += '<div class="step-content">';
+      html += '<div class="step-title">' + esc(step.title) + '</div>';
+      html += '<div class="step-body">' + esc(step.body) + '</div>';
+      html += '<div class="step-tags">';
+      html += '<span class="step-tag pos">&#8599; ' + step.pos + '</span>';
+      if(step.action) html += '<span class="step-tag action">&#9889; ' + step.action + '</span>';
+      if(step.find) html += '<span class="step-tag condition">&#128270; ' + esc(step.find) + '</span>';
+      html += '</div></div>';
+      html += '<div class="step-actions">';
+      html += '<button onclick="editStep(' + i + ',' + j + ')" title="Modifier">&#9998;</button>';
+      html += '<button onclick="moveStep(' + i + ',' + j + ',-1)" title="Monter">&#9650;</button>';
+      html += '<button onclick="moveStep(' + i + ',' + j + ',1)" title="Descendre">&#9660;</button>';
+      html += '<button onclick="deleteStep(' + i + ',' + j + ')" title="Supprimer">&#128465;</button>';
+      html += '</div></div>';
+    });
+    html += '<button class="btn btn-ghost btn-sm" onclick="addStep(' + i + ')" style="margin-top:8px">+ Ajouter une etape</button>';
+    html += '</div></div>';
+  });
+
+  return html;
+}
+
+function renderWhatsNew() {
+  var html = '<div class="page-header">';
+  html += '<h1>&#9889; Nouveautes & Features</h1>';
+  html += '<p>Annoncez les nouvelles fonctionnalites a vos utilisateurs</p>';
+  html += '</div>';
+
+  html += '<div style="display:flex;gap:12px;margin-bottom:20px;align-items:center">';
+  html += '<span class="status draft">&#9679; Brouillon</span>';
+  html += '<div style="margin-left:auto">';
+  html += '<button class="btn btn-primary btn-sm" onclick="addAnnouncement()">+ Nouvelle annonce</button>';
+  html += '</div></div>';
+
+  if (DATA.whatsNew.announcements.length === 0) {
+    html += '<div class="card"><div class="empty">';
+    html += '<div class="icon">&#128227;</div>';
+    html += '<h3>Aucune annonce configuree</h3>';
+    html += '<p>Creez votre premiere annonce de nouveaute. Elle apparaitra sous forme de popup ou de tour guide pour presenter les nouvelles fonctionnalites.</p>';
+    html += '<button class="btn btn-primary" onclick="addAnnouncement()">&#10010; Creer une annonce</button>';
+    html += '</div></div>';
+  } else {
+    DATA.whatsNew.announcements.forEach(function(ann, i) {
+      html += '<div class="card">';
+      html += '<div class="card-header">';
+      html += '<h3>' + esc(ann.title) + '</h3>';
+      html += '<div style="display:flex;gap:8px;align-items:center">';
+      html += '<span class="status ' + ann.status + '">&#9679; ' + (ann.status==='live'?'Actif':'Brouillon') + '</span>';
+      html += '<button class="btn btn-ghost btn-sm" onclick="editAnnouncement(' + i + ')">&#9998;</button>';
+      html += '<button class="btn btn-ghost btn-sm" onclick="deleteAnnouncement(' + i + ')">&#128465;</button>';
+      html += '</div></div>';
+      html += '<div class="card-body">';
+      html += '<p style="font-size:13px;color:var(--gray);margin-bottom:8px">' + esc(ann.description||'') + '</p>';
+      html += '<div style="display:flex;gap:8px">';
+      html += '<span class="step-tag pos">' + (ann.type||'popup') + '</span>';
+      html += '<span class="step-tag condition">' + (ann.target||'tous les utilisateurs') + '</span>';
+      if(ann.steps) html += '<span class="steps-count">' + ann.steps.length + ' etape(s)</span>';
+      html += '</div></div></div>';
+    });
+  }
+
+  return html;
+}
+
+function renderSettings() {
+  var html = '<div class="page-header">';
+  html += '<h1>&#9881; Parametres</h1>';
+  html += '<p>Configuration globale de DemoDK</p>';
+  html += '</div>';
+
+  html += '<div class="card"><div class="card-header"><h3>General</h3></div><div class="card-body">';
+  html += '<div class="form-row"><div class="form-group">';
+  html += '<label>Couleur principale</label>';
+  html += '<input type="color" value="#FFA944" style="height:40px;cursor:pointer">';
+  html += '</div><div class="form-group">';
+  html += '<label>Duree d\'affichage (jours)</label>';
+  html += '<input type="number" value="14" min="1" max="90">';
+  html += '</div></div>';
+  html += '<div class="form-row"><div class="form-group">';
+  html += '<label>Cle localStorage</label>';
+  html += '<input type="text" value="demodk_v5" readonly style="background:#f9f9f9">';
+  html += '</div><div class="form-group">';
+  html += '<label>Max relances CTA</label>';
+  html += '<input type="number" value="5" min="0" max="20">';
+  html += '</div></div>';
+  html += '</div></div>';
+
+  html += '<div class="card"><div class="card-header"><h3>Deploiement</h3></div><div class="card-body">';
+  html += '<div class="form-group">';
+  html += '<label>Script URL</label>';
+  html += '<input type="text" value="https://formation-sooty.vercel.app/demodk-inject.js" readonly style="background:#f9f9f9">';
+  html += '<div class="form-help">Heberge sur Vercel, charge via Google Tag Manager (GTM-M43BXC3K)</div>';
+  html += '</div>';
+  html += '<div class="form-group">';
+  html += '<label>Tag GTM</label>';
+  html += '<div style="background:#1e1e2e;border-radius:8px;padding:14px;font-family:monospace;font-size:12px;color:#a5f3a5;line-height:1.6">';
+  html += '&lt;script&gt;<br>';
+  html += '&nbsp;&nbsp;if(location.hostname==="app.dresskare.com"){<br>';
+  html += '&nbsp;&nbsp;&nbsp;&nbsp;var s=document.createElement("script");<br>';
+  html += '&nbsp;&nbsp;&nbsp;&nbsp;s.src="https://formation-sooty.vercel.app/demodk-inject.js";<br>';
+  html += '&nbsp;&nbsp;&nbsp;&nbsp;document.head.appendChild(s);<br>';
+  html += '&nbsp;&nbsp;}<br>';
+  html += '&lt;/script&gt;';
+  html += '</div>';
+  html += '<div class="form-help">Tag HTML personnalise &middot; Trigger: All Pages &middot; Statut: sauvegarde, non publie</div>';
+  html += '</div>';
+  html += '</div></div>';
+
+  return html;
+}
+
+function renderPreview() {
+  var html = '<div class="page-header">';
+  html += '<h1>&#128065; Preview</h1>';
+  html += '<p>Previsualiser l\'onboarding sur app.dresskare.com</p>';
+  html += '</div>';
+
+  html += '<div class="card"><div class="card-body" style="text-align:center;padding:40px">';
+  html += '<p style="font-size:14px;color:var(--gray);margin-bottom:20px">Pour previsualiser, ouvrez app.dresskare.com et executez dans la console :</p>';
+  html += '<div style="background:#1e1e2e;border-radius:8px;padding:16px;font-family:monospace;font-size:13px;color:#a5f3a5;text-align:left;margin-bottom:20px">';
+  html += 'DemoDK.reset(); // Reset complet<br>';
+  html += 'DemoDK.openPanel(); // Ouvrir le panel<br>';
+  html += 'DemoDK.startTour("nav"); // Lancer un tour<br>';
+  html += 'DemoDK.showCTA(); // Afficher la relance';
+  html += '</div>';
+  html += '<a href="https://app.dresskare.com/stock" target="_blank" class="btn btn-primary">&#128279; Ouvrir app.dresskare.com</a>';
+  html += '</div></div>';
+
+  return html;
+}
+
+// ============================================
+// ACTIONS
+// ============================================
+function switchContext(val) {
+  currentContext = val;
+  render();
+}
+
+function toggleBlock(idx) {
+  var key = currentContext + '_' + idx;
+  openBlocks[key] = !openBlocks[key];
+  render();
+}
+
+function getBlocks() {
+  return DATA.onboarding.experiences[currentContext].blocks;
+}
+
+function editBlock(idx) {
+  editingBlock = {blockIdx: idx};
+  var block = getBlocks()[idx];
+  var modal = document.getElementById('blockModal');
+  document.getElementById('blockModalTitle').textContent = 'Modifier : ' + block.label;
+  var html = '<div class="form-group"><label>Label</label><input type="text" id="eb_label" value="' + esc(block.label) + '"></div>';
+  html += '<div class="form-group"><label>Description</label><input type="text" id="eb_desc" value="' + esc(block.desc) + '"></div>';
+  html += '<div class="form-row"><div class="form-group"><label>Numero</label><input type="text" id="eb_num" value="' + esc(block.num) + '" placeholder="vide = bullet"></div>';
+  html += '<div class="form-group"><label>Route</label><input type="text" id="eb_route" value="' + esc(block.route||'') + '" placeholder="/stock, /repost, _orders..."></div></div>';
+  document.getElementById('blockModalBody').innerHTML = html;
+  modal.classList.add('open');
+}
+
+function saveBlock() {
+  if (!editingBlock) return;
+  var block = getBlocks()[editingBlock.blockIdx];
+  block.label = document.getElementById('eb_label').value;
+  block.desc = document.getElementById('eb_desc').value;
+  block.num = document.getElementById('eb_num').value;
+  block.route = document.getElementById('eb_route').value || null;
+  closeBlockModal();
+  render();
+}
+
+function closeBlockModal() {
+  document.getElementById('blockModal').classList.remove('open');
+  editingBlock = null;
+}
+
+function deleteBlock(idx) {
+  if (!confirm('Supprimer ce bloc et toutes ses etapes ?')) return;
+  getBlocks().splice(idx, 1);
+  render();
+}
+
+function addBlock() {
+  getBlocks().push({
+    id: 'block_' + Date.now(),
+    num: String(getBlocks().length),
+    label: 'Nouveau bloc',
+    desc: 'Description du bloc',
+    route: null,
+    steps: []
+  });
+  var key = currentContext + '_' + (getBlocks().length - 1);
+  openBlocks[key] = true;
+  render();
+}
+
+function editStep(blockIdx, stepIdx) {
+  editingStep = {blockIdx: blockIdx, stepIdx: stepIdx};
+  var step = getBlocks()[blockIdx].steps[stepIdx];
+  var modal = document.getElementById('stepModal');
+  document.getElementById('modalTitle').textContent = 'Etape ' + (stepIdx+1) + ' : ' + step.title;
+  var html = '<div class="form-group"><label>Titre</label><input type="text" id="es_title" value="' + esc(step.title) + '"></div>';
+  html += '<div class="form-group"><label>Contenu (HTML supporte)</label><textarea id="es_body" rows="4">' + esc(step.body) + '</textarea></div>';
+  html += '<div class="form-row">';
+  html += '<div class="form-group"><label>Position tooltip</label><select id="es_pos">';
+  ['bottom','top','left','right'].forEach(function(p){
+    html += '<option value="'+p+'"'+(step.pos===p?' selected':'')+'>'+p+'</option>';
+  });
+  html += '</select></div>';
+  html += '<div class="form-group"><label>Selecteur (find)</label><input type="text" id="es_find" value="' + esc(step.find||'') + '" placeholder="fN(\'Dashboard\'), .extension-indicator"></div>';
+  html += '</div>';
+  html += '<div class="form-group"><label>Action au clic Suivant</label><input type="text" id="es_action" value="' + esc(step.action||'') + '" placeholder="openAddArticles, openConfigRepub...">';
+  html += '<div class="form-help">Action executee quand l\'utilisateur clique "Suivant" sur cette etape</div></div>';
+  document.getElementById('modalBody').innerHTML = html;
+  modal.classList.add('open');
+}
+
+function saveStep() {
+  if (!editingStep) return;
+  var step = getBlocks()[editingStep.blockIdx].steps[editingStep.stepIdx];
+  step.title = document.getElementById('es_title').value;
+  step.body = document.getElementById('es_body').value;
+  step.pos = document.getElementById('es_pos').value;
+  step.find = document.getElementById('es_find').value || undefined;
+  step.action = document.getElementById('es_action').value || undefined;
+  closeModal();
+  render();
+}
+
+function closeModal() {
+  document.getElementById('stepModal').classList.remove('open');
+  editingStep = null;
+}
+
+function deleteStep(blockIdx, stepIdx) {
+  if (!confirm('Supprimer cette etape ?')) return;
+  getBlocks()[blockIdx].steps.splice(stepIdx, 1);
+  render();
+}
+
+function addStep(blockIdx) {
+  getBlocks()[blockIdx].steps.push({
+    title: 'Nouvelle etape',
+    body: 'Description de l\'etape',
+    pos: 'bottom',
+    find: '',
+    action: ''
+  });
+  var key = currentContext + '_' + blockIdx;
+  openBlocks[key] = true;
+  render();
+}
+
+function moveStep(blockIdx, stepIdx, dir) {
+  var steps = getBlocks()[blockIdx].steps;
+  var newIdx = stepIdx + dir;
+  if (newIdx < 0 || newIdx >= steps.length) return;
+  var temp = steps[stepIdx];
+  steps[stepIdx] = steps[newIdx];
+  steps[newIdx] = temp;
+  render();
+}
+
+function addAnnouncement() {
+  var title = prompt('Nom de l\'annonce :');
+  if (!title) return;
+  DATA.whatsNew.announcements.push({
+    title: title,
+    description: '',
+    type: 'popup',
+    target: 'tous les utilisateurs',
+    status: 'draft',
+    steps: []
+  });
+  render();
+}
+
+function editAnnouncement(idx) {
+  var ann = DATA.whatsNew.announcements[idx];
+  var title = prompt('Titre :', ann.title);
+  if (title) ann.title = title;
+  var desc = prompt('Description :', ann.description);
+  if (desc !== null) ann.description = desc;
+  render();
+}
+
+function deleteAnnouncement(idx) {
+  if (!confirm('Supprimer cette annonce ?')) return;
+  DATA.whatsNew.announcements.splice(idx, 1);
+  render();
+}
+
+function exportConfig() {
+  var json = JSON.stringify(DATA, null, 2);
+  var blob = new Blob([json], {type: 'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'demodk-config.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function bindEvents() {
+  // Close modals on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) {
+        overlay.classList.remove('open');
+        editingStep = null;
+        editingBlock = null;
+      }
+    });
+  });
+}
+
+function esc(str) {
+  if (!str) return '';
+  var div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// ============================================
+// INIT
+// ============================================
+render();
+</script>
+</body>
+</html>
